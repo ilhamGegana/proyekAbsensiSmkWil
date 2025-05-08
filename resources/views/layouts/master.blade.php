@@ -47,6 +47,7 @@
             $('#dataTable').DataTable();
         });
     </script>
+    @include('partials.logout-modal')
 </body>
 
 </html>

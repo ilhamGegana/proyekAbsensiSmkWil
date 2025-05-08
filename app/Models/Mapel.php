@@ -11,7 +11,7 @@ class Mapel extends Model
     use HasFactory;
 
     protected $table = 'mapel';
-    protected $primaryKey = 'id_mapel';
+    protected $primaryKey = 'id';
     protected $fillable = [
         'nama_mapel',
     ];

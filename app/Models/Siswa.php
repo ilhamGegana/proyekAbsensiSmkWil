@@ -10,7 +10,7 @@ class Siswa extends Model
     use HasFactory;
 
     protected $table = 'siswa';
-    protected $primaryKey = 'id_siswa';
+    protected $primaryKey = 'id';
     protected $fillable = [
         'nis',
         'nama_siswa',
@@ -25,7 +25,7 @@ class Siswa extends Model
 
     public function user()
     {
-        return $this->hasOne(User::class, 'id_siswa');
+        return $this->hasOne(Users::class, 'id_siswa');
     }
 
     public function kelas()

@@ -14,7 +14,7 @@ class WalimuridController extends Controller
     public function index()
     {
         $walimurid = Walimurid::all();
-        return view('walimurid.index', compact('walimurid'));
+        return view('admin.walimurid.index', compact('walimurid'));
     }
 
     /**
@@ -22,7 +22,7 @@ class WalimuridController extends Controller
      */
     public function create()
     {
-        return view('walimurid.create');
+        return view('admin.walimurid.create');
     }
 
     /**
@@ -38,7 +38,7 @@ class WalimuridController extends Controller
         ]);
 
         Walimurid::create($request->all());
-        return redirect()->route('walimurid.index')->with('success', 'Data berhasil ditambahkan');
+        return redirect()->route('admin.walimurid.index')->with('success', 'Data berhasil ditambahkan');
     }
 
     /**
@@ -54,7 +54,7 @@ class WalimuridController extends Controller
      */
     public function edit(Walimurid $walimurid)
     {
-        return view('walimurid.edit', compact('walimurid'));
+        return view('admin.walimurid.edit', compact('walimurid'));
     }
 
     /**
@@ -70,7 +70,7 @@ class WalimuridController extends Controller
         ]);
 
         $walimurid->update($request->all());
-        return redirect()->route('walimurid.index')->with('success', 'Data berhasil diupdate');
+        return redirect()->route('admin.walimurid.index')->with('success', 'Data berhasil diupdate');
     }
 
     /**
@@ -79,6 +79,6 @@ class WalimuridController extends Controller
     public function destroy(Walimurid $walimurid)
     {
         $walimurid->delete();
-        return redirect()->route('walimurid.index')->with('success', 'Data berhasil dihapus');
+        return redirect()->route('admin.walimurid.index')->with('success', 'Data berhasil dihapus');
     }
 }

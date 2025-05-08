@@ -9,7 +9,7 @@ class AuthController extends Controller
 {
     public function showLoginForm()
     {
-        return view('auth.login'); // nanti buat file ini
+        return view('auth.login');
     }
 
     public function login(Request $request)
@@ -22,7 +22,7 @@ class AuthController extends Controller
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
 
-            return redirect()->intended('/dashboard'); // redirect setelah login
+            return redirect()->intended('/admin/dashboard'); // redirect setelah login
         }
 
         return back()->withErrors([
