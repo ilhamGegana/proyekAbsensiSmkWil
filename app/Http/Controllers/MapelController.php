@@ -35,7 +35,7 @@ class MapelController extends Controller
 
         Mapel::create($request->all());
 
-        return redirect()->route('admin.mapel.index')->with('success', 'Mata pelajaran berhasil ditambahkan.');
+        return redirect()->route('mapel.index')->with('success', 'Mata pelajaran berhasil ditambahkan.');
     }
 
     /**
@@ -65,7 +65,7 @@ class MapelController extends Controller
 
         $mapel->update($request->all());
 
-        return redirect()->route('admin.mapel.index')->with('success', 'Mata pelajaran berhasil diperbarui.');
+        return redirect()->route('mapel.index')->with('success', 'Mata pelajaran berhasil diperbarui.');
     }
 
     /**
@@ -74,6 +74,6 @@ class MapelController extends Controller
     public function destroy(Mapel $mapel)
     {
         $mapel->delete();
-        return redirect()->route('admin.mapel.index')->with('success', 'Mata pelajaran berhasil dihapus.');
+        return redirect()->route('mapel.index')->with('success', 'Mata pelajaran berhasil dihapus.');
     }
 }

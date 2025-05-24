@@ -38,7 +38,7 @@ class WalimuridController extends Controller
         ]);
 
         Walimurid::create($request->all());
-        return redirect()->route('admin.walimurid.index')->with('success', 'Data berhasil ditambahkan');
+        return redirect()->route('walimurid.index')->with('success', 'Data berhasil ditambahkan');
     }
 
     /**
@@ -70,7 +70,7 @@ class WalimuridController extends Controller
         ]);
 
         $walimurid->update($request->all());
-        return redirect()->route('admin.walimurid.index')->with('success', 'Data berhasil diupdate');
+        return redirect()->route('walimurid.index')->with('success', 'Data berhasil diupdate');
     }
 
     /**
@@ -78,7 +78,21 @@ class WalimuridController extends Controller
      */
     public function destroy(Walimurid $walimurid)
     {
+        // Cek relasi siswa
+        if ($walimurid->siswa()->exists()) {
+            return redirect()->route('walimurid.index')
+                ->with('error', 'Gagal menghapus: Masih ada siswa yang terhubung dengan walimurid ini.');
+        }
+
+        // Cek relasi user
+        if ($walimurid->user()->exists()) {
+            return redirect()->route('walimurid.index')
+                ->with('error', 'Gagal menghapus: Masih ada user yang terhubung dengan walimurid ini.');
+        }
+
+        // Jika aman, baru hapus
         $walimurid->delete();
-        return redirect()->route('admin.walimurid.index')->with('success', 'Data berhasil dihapus');
+
+        return redirect()->route('walimurid.index')->with('success', 'Data berhasil dihapus');
     }
 }

@@ -15,8 +15,11 @@ class JadwalPelajaranController extends Controller
      */
     public function index()
     {
-        $jadwal = JadwalPelajaran::with(['guru', 'mapel', 'kelas'])->get();
-        return view('admin.jadwalPelajaran.index', compact('jadwal'));
+        $jadwalPelajaran = JadwalPelajaran::with(['guru', 'mapel', 'kelas'])->get();
+        $guru = Guru::all();
+        $mapel = Mapel::all();
+        $kelas = Kelas::all();
+        return view('admin.jadwalPelajaran.index', compact('jadwalPelajaran', 'guru', 'mapel', 'kelas'));
     }
 
     /**
@@ -44,7 +47,7 @@ class JadwalPelajaranController extends Controller
 
         JadwalPelajaran::create($request->all());
 
-        return redirect()->route('admin.jadwalPelajaran.index')->with('success', 'Jadwal pelajaran berhasil ditambahkan.');
+        return redirect()->route('jadwalPelajaran.index')->with('success', 'Jadwal pelajaran berhasil ditambahkan.');
     }
 
     /**
@@ -58,18 +61,18 @@ class JadwalPelajaranController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(JadwalPelajaran $jadwal)
+    public function edit(JadwalPelajaran $jadwalPelajaran)
     {
         $guru = Guru::all();
         $mapel = Mapel::all();
         $kelas = Kelas::all();
-        return view('admin.jadwalPelajaran.edit', compact('jadwal', 'guru', 'mapel', 'kelas'));
+        return view('admin.jadwalPelajaran.edit', compact('jadwalPelajaran', 'guru', 'mapel', 'kelas'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, JadwalPelajaran $jadwal)
+    public function update(Request $request, JadwalPelajaran $jadwalPelajaran)
     {
         $request->validate([
             'hari' => 'required|max:20',
@@ -78,17 +81,21 @@ class JadwalPelajaranController extends Controller
             'id_kelas' => 'required|exists:kelas,id',
         ]);
 
-        $jadwal->update($request->all());
+        $jadwalPelajaran->update($request->all());
 
-        return redirect()->route('admin.jadwalPelajaran.index')->with('success', 'Jadwal pelajaran berhasil diperbarui.');
+        return redirect()->route('jadwalPelajaran.index')->with('success', 'Jadwal pelajaran berhasil diperbarui.');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(JadwalPelajaran $jadwal)
+    public function destroy(JadwalPelajaran $jadwalPelajaran)
     {
-        $jadwal->delete();
-        return redirect()->route('admin.jadwalPelajaran.index')->with('success', 'Jadwal pelajaran berhasil dihapus.');
+        if ($jadwalPelajaran->absensi()->exists()) {
+            return back()->with('error', 'Jadwal sudah digunakan di absensi.');
+        }
+
+        $jadwalPelajaran->delete();
+        return back()->with('success', 'Jadwal pelajaran berhasil dihapus.');
     }
 }

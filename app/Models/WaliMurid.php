@@ -25,6 +25,6 @@ class WaliMurid extends Model
 
     public function user()
     {
-        return $this->hasOne(Users::class, 'id_walimurid');
+        return $this->hasOne(User::class, 'id_walimurid');
     }
 }

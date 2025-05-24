@@ -14,7 +14,8 @@ class KelasController extends Controller
     public function index()
     {
         $kelas = Kelas::with('guru')->get();
-        return view('admin.kelas.index', compact('kelas'));
+        $guru = Guru::all();
+        return view('admin.kelas.index', compact('kelas', 'guru'));
     }
 
     /**
@@ -39,7 +40,7 @@ class KelasController extends Controller
 
         Kelas::create($request->all());
 
-        return redirect()->route('admin.kelas.index')->with('success', 'Data kelas berhasil ditambahkan.');
+        return redirect()->route('kelas.index')->with('success', 'Data kelas berhasil ditambahkan.');
     }
 
     /**
@@ -72,7 +73,7 @@ class KelasController extends Controller
 
         $kelas->update($request->all());
 
-        return redirect()->route('admin.kelas.index')->with('success', 'Data kelas berhasil diperbarui.');
+        return redirect()->route('kelas.index')->with('success', 'Data kelas berhasil diperbarui.');
     }
 
     /**
@@ -80,7 +81,15 @@ class KelasController extends Controller
      */
     public function destroy(Kelas $kelas)
     {
+        // Cek apakah kelas memiliki siswa
+        if ($kelas->siswa()->exists()) {
+            return redirect()->route('kelas.index')
+                ->with('error', 'Gagal menghapus: Masih ada siswa di kelas ini.');
+        }
+
+        // Jika aman, hapus kelas
         $kelas->delete();
-        return redirect()->route('admin.kelas.index')->with('success', 'Data kelas berhasil dihapus.');
+
+        return redirect()->route('kelas.index')->with('success', 'Data kelas berhasil dihapus.');
     }
 }

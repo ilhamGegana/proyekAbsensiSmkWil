@@ -38,7 +38,7 @@ class GuruController extends Controller
 
         Guru::create($request->all());
 
-        return redirect()->route('admin.guru.index')->with('success', 'Data guru berhasil ditambahkan.');
+        return redirect()->route('guru.index')->with('success', 'Data guru berhasil ditambahkan.');
     }
 
     /**
@@ -71,7 +71,7 @@ class GuruController extends Controller
 
         $guru->update($request->all());
 
-        return redirect()->route('admin.guru.index')->with('success', 'Data guru berhasil diperbarui.');
+        return redirect()->route('guru.index')->with('success', 'Data guru berhasil diperbarui.');
     }
 
     /**
@@ -79,7 +79,27 @@ class GuruController extends Controller
      */
     public function destroy(Guru $guru)
     {
+        // Cek apakah guru memiliki akun user
+        if ($guru->user()->exists()) {
+            return redirect()->route('guru.index')
+                ->with('error', 'Gagal menghapus: Guru masih memiliki akun user.');
+        }
+
+        // Cek apakah guru menjadi wali kelas
+        if ($guru->kelas()->exists()) {
+            return redirect()->route('guru.index')
+                ->with('error', 'Gagal menghapus: Guru masih menjadi wali kelas.');
+        }
+
+        // Cek apakah guru memiliki jadwal pelajaran
+        if ($guru->jadwal()->exists()) {
+            return redirect()->route('guru.index')
+                ->with('error', 'Gagal menghapus: Guru masih memiliki jadwal pelajaran.');
+        }
+
+        // Jika tidak ada relasi aktif, hapus guru
         $guru->delete();
-        return redirect()->route('admin.guru.index')->with('success', 'Data guru berhasil dihapus.');
+
+        return redirect()->route('guru.index')->with('success', 'Data guru berhasil dihapus.');
     }
 }

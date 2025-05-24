@@ -1,0 +1,16 @@
+.bg-gradient-primary {
+    background-color: #077a33 !important;
+    background-image: none !important;
+}
+.text-green-custom {
+    color: #077a33 !important;
+}
+.btn-green {
+    background-color: #077a33;
+    color: #fff;
+}
+
+.btn-green:hover {
+    background-color: #06692c;
+    color: #fff;
+}

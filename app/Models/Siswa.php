@@ -25,7 +25,7 @@ class Siswa extends Model
 
     public function user()
     {
-        return $this->hasOne(Users::class, 'id_siswa');
+        return $this->hasOne(User::class, 'id_siswa');
     }
 
     public function kelas()

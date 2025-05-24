@@ -14,8 +14,10 @@ class SiswaController extends Controller
      */
     public function index()
     {
-        $siswa = Siswa::with(['kelas', 'walimurid'])->get();
-        return view('admin.siswa.index', compact('siswa'));
+        $siswa = Siswa::with('kelas')->get();
+        $kelas = Kelas::all();
+        $walimurid = Walimurid::all();
+        return view('admin.siswa.index', compact('siswa', 'kelas', 'walimurid'));
     }
 
     /**
@@ -42,11 +44,12 @@ class SiswaController extends Controller
             'no_telp_siswa' => 'nullable|max:15',
             'id_kelas' => 'nullable|exists:kelas,id',
             'id_walimurid' => 'nullable|exists:walimurid,id',
+            'signature_data' => 'nullable|string',
         ]);
 
         Siswa::create($request->all());
 
-        return redirect()->route('admin.siswa.index')->with('success', 'Data siswa berhasil ditambahkan.');
+        return redirect()->route('siswa.index')->with('success', 'Data siswa berhasil ditambahkan.');
     }
 
     /**
@@ -81,11 +84,12 @@ class SiswaController extends Controller
             'no_telp_siswa' => 'nullable|max:15',
             'id_kelas' => 'nullable|exists:kelas,id',
             'id_walimurid' => 'nullable|exists:walimurid,id',
+            'signature_data' => 'nullable|string',
         ]);
 
         $siswa->update($request->all());
 
-        return redirect()->route('admin.siswa.index')->with('success', 'Data siswa berhasil diperbarui.');
+        return redirect()->route('siswa.index')->with('success', 'Data siswa berhasil diperbarui.');
     }
 
     /**
@@ -93,7 +97,27 @@ class SiswaController extends Controller
      */
     public function destroy(Siswa $siswa)
     {
+        // Cek apakah siswa punya akun user
+        if ($siswa->user()->exists()) {
+            return redirect()->route('siswa.index')
+                ->with('error', 'Gagal menghapus: Siswa masih memiliki akun user.');
+        }
+
+        // Cek apakah siswa memiliki absensi
+        if ($siswa->absensi()->exists()) {
+            return redirect()->route('siswa.index')
+                ->with('error', 'Gagal menghapus: Siswa masih memiliki data absensi.');
+        }
+
+        // Cek apakah siswa memiliki notifikasi
+        if ($siswa->notifikasi()->exists()) {
+            return redirect()->route('siswa.index')
+                ->with('error', 'Gagal menghapus: Siswa masih memiliki notifikasi yang dikirim atau diterima.');
+        }
+
+        // Jika tidak ada relasi aktif, hapus siswa
         $siswa->delete();
-        return redirect()->route('admin.siswa.index')->with('success', 'Data siswa berhasil dihapus.');
+
+        return redirect()->route('siswa.index')->with('success', 'Data siswa berhasil dihapus.');
     }
 }
