@@ -21,3 +21,6 @@ yarn-error.log
 /.nova
 /.vscode
 /.zed
+/backups
+/public/signatures/
+/public/signature_data/

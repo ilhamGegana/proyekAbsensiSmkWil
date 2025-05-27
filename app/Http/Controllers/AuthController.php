@@ -22,11 +22,15 @@ class AuthController extends Controller
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
 
-            return redirect()->intended('/admin/dashboard'); // redirect setelah login
+            return match (Auth::user()->role) {
+                'guru'  => redirect()->intended('/guru/home'),
+                'admin' => redirect()->intended('/admin/dashboard'),
+                default => redirect()->intended('/'),
+            };
         }
 
         return back()->withErrors([
-            'username' => 'Username atau password salah.',
+            'username' => 'Username atau password salah.'
         ]);
     }
 
