@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers\Guru;
 
+use Intervention\Image\Laravel\Facades\Image;
 use App\Http\Controllers\Controller;
 use App\Models\Absensi;
 use App\Models\JadwalPelajaran;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
+
 
 class AttendanceController extends Controller
 {
@@ -71,23 +73,43 @@ class AttendanceController extends Controller
   public function signStore(Request $request, \App\Models\Siswa $siswa)
   {
     $request->validate([
-      'signature' => 'required|string' // base64 dataURL
+      'signature' => 'required|string'      // base64
     ]);
 
     $jadwalId = $request->input('jadwal');
     $date     = $request->input('date', Carbon::today()->toDateString());
 
-    // simpan PNG di public/signatures
-    $data      = $request->signature;
-    [$meta, $content] = explode(',', $data);  // "data:image/png;base64,..."
-    $pngData   = base64_decode($content);
-    $filename  = 'sig_' . $siswa->id . '_' . now()->timestamp . '.png';
-    $path      = public_path('signatures/' . $filename);
-    file_put_contents($path, $pngData);
+    /* ──────────────────────────
+       1) baca Data-URI langsung
+    ──────────────────────────*/
+    $dataUri = str_replace(' ', '+', $request->signature);
+    logger()->info('SIG LEN: ' . strlen($dataUri));
+    logger()->info(substr($dataUri, 0, 120));   // cek 120 karakter pertama
 
-    // update absensi
+    $img = Image::read($dataUri)
+      ->trim()                        // buang tepi transparan
+      ->resizeCanvas(                 // v3: 4 argumen
+        600,                       // width
+        200,                       // height
+        'ffffff',                  // anchor
+        'center'                   // bg putih
+      );
+
+    /* ──────────────────────────
+       2) simpan
+    ──────────────────────────*/
+    $filename = 'sig_' . $siswa->id . '_' . now()->timestamp . '.png';
+    $img->save(public_path("signatures/{$filename}"));  // auto-PNG
+
+    /* ──────────────────────────
+       3) update DB
+    ──────────────────────────*/
     Absensi::updateOrCreate(
-      ['id_siswa' => $siswa->id, 'id_jadwal' => $jadwalId, 'tgl_waktu_absen' => $date],
+      [
+        'id_siswa'        => $siswa->id,
+        'id_jadwal'       => $request->jadwal,
+        'tgl_waktu_absen' => $request->date ?? today(),
+      ],
       ['signature_ref' => $filename]
     );
 

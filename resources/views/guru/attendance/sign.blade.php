@@ -27,12 +27,19 @@
         const ctx = canvas.getContext('2d');
         let drawing = false;
 
+        // --- helper: isi putih seluruh kanvas  ---
+        function fillWhite() {
+            ctx.fillStyle = '#fff';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+        }
+
+        // --- resize agar tajam di Hi-DPI & tetap putih ---
         function resize() {
-            // keep crisp on resize
             const ratio = Math.max(window.devicePixelRatio || 1, 1);
             canvas.width = canvas.offsetWidth * ratio;
             canvas.height = canvas.offsetHeight * ratio;
-            canvas.getContext("2d").scale(ratio, ratio);
+            ctx.scale(ratio, ratio);
+            fillWhite(); // <─ latar putih
         }
         window.onresize = resize;
         resize();
@@ -79,9 +86,13 @@
 
         document.getElementById('clear').onclick = () => {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
+            fillWhite(); // <─ kembalikan latar putih
         };
 
-        document.getElementById('save').onclick = (e) => {
+        // tombol Save → kirim dataURL
+        document.getElementById('save').onclick = () => {
+            // pastikan ada latar putih sebelum konversi
+            // (opsional bila fillWhite selalu dipanggil)
             const dataURL = canvas.toDataURL('image/png');
             document.getElementById('signature').value = dataURL;
         };

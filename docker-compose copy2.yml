@@ -1,0 +1,6 @@
+services:
+  laravel.test:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: "/usr/bin/supervisord -c /etc/supervisor/supervisord.conf"
