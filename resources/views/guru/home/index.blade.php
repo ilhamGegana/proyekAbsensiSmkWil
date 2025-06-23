@@ -1,96 +1,13 @@
-{{-- @extends('guru/template/template')
-
-@section('content')
-  <div class="container-header mb-5">Home</div>
-
-  <div class="container p-0">
-    <div class="row">
-      <div class="col-6 p-3">
-        <div class="card">
-          <div class="card-body p-3 p-md-5">
-            <div class="d-flex gap-1 gap-md-3">
-              <span class="square present"></span>
-              <p class="d-flex align-items-center m-0 dashboard-text">
-                Present
-              </p>
-            </div>
-            <br>
-            <p class="dashboard-text m-0">
-              {{ $presentCount }}
-            </p>
-          </div>
-        </div>
-      </div>
-
-      <div class="col-6 p-3">
-        <div class="card">
-          <div class="card-body p-3 p-md-5">
-            <div class="d-flex gap-1 gap-md-3">
-              <span class="square sick"></span>
-              <p class="d-flex align-items-center m-0 dashboard-text">
-                Sick
-              </p>
-            </div>
-            <br>
-            <p class="dashboard-text m-0">
-              {{ $sickCount }}
-            </p>
-          </div>
-        </div>
-      </div>
-
-      <div class="col-6 p-3">
-        <div class="card">
-          <div class="card-body p-3 p-md-5">
-            <div class="d-flex gap-1 gap-md-3">
-              <span class="square permisson"></span>
-              <p class="d-flex align-items-center m-0 dashboard-text">
-                Permission
-              </p>
-            </div>
-            <br>
-            <p class="dashboard-text m-0">
-              {{ $permissionCount }}
-            </p>
-          </div>
-        </div>
-      </div>
-
-      <div class="col-6 p-3">
-        <div class="card">
-          <div class="card-body p-3 p-md-5">
-            <div class="d-flex gap-1 gap-md-3">
-              <span class="square absent"></span>
-              <p class="d-flex align-items-center m-0 dashboard-text">
-                Absent
-              </p>
-            </div>
-            <br>
-            <p class="dashboard-text m-0">
-              {{ $absentCount }}
-            </p>
-          </div>
-        </div>
-      </div>
-    </div>
-    <a href="{{ route('attendance') }}">
-      <button class="btn btn-blue mt-5">
-        Start Attendance
-      </button>
-    </a>
-  </div>
-@endsection --}}
-
 {{-- resources/views/guru/home.blade.php --}}
 @extends('guru.template.template')
 
 @section('title', 'Dashboard')
-
+@section('page-title', 'Dashboard Guru')
 @section('content')
 <!-- Page Heading -->
 <div class="d-sm-flex align-items-center justify-content-between mb-4">
     <h1 class="h3 mb-0 text-gray-800">Dashboard</h1>
-    <a href="{{ route('guru.attendance') }}" class="d-none d-sm-inline-block btn btn-primary shadow-sm">
+    <a href="{{ route('guru.attendance') }}" class="d-none d-sm-inline-block btn btn-green shadow-sm ">
         <i class="fas fa-clipboard-list fa-sm text-white-50 mr-2"></i>Mulai Absensi
     </a>
 </div>

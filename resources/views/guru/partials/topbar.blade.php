@@ -1,5 +1,17 @@
 <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+    <!-- Sidebar Toggle (untuk mobile) -->
+    <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3" style="color: #077a33;">
+        <i class="fa fa-bars"></i>
+    </button>
+
+    <!-- Sidebar Toggle (untuk desktop) -->
+    <button id="sidebarToggle" class="btn btn-link d-none d-md-inline rounded-circle mr-3" style="color: #077a33;">
+        <i class="fa fa-angle-double-left"></i>
+    </button>
+
+    <!-- Judul Halaman -->
     <h4 class="mb-0 text-gray-800">@yield('page-title', 'Dashboard Admin')</h4>
+
     <ul class="navbar-nav ml-auto">
         <!-- Nav Item - User Information -->
         <li class="nav-item dropdown no-arrow">
@@ -20,5 +32,3 @@
         </li>
     </ul>
 </nav>
-
-

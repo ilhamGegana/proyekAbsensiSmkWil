@@ -9,6 +9,8 @@ use App\Models\JadwalPelajaran;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Process;
+use Illuminate\Support\Facades\File;
 
 
 class AttendanceController extends Controller
@@ -83,8 +85,6 @@ class AttendanceController extends Controller
        1) baca Data-URI langsung
     ──────────────────────────*/
     $dataUri = str_replace(' ', '+', $request->signature);
-    logger()->info('SIG LEN: ' . strlen($dataUri));
-    logger()->info(substr($dataUri, 0, 120));   // cek 120 karakter pertama
 
     $img = Image::read($dataUri)
       ->trim()                        // buang tepi transparan
@@ -99,8 +99,33 @@ class AttendanceController extends Controller
        2) simpan
     ──────────────────────────*/
     $filename = 'sig_' . $siswa->id . '_' . now()->timestamp . '.png';
-    $img->save(public_path("signatures/{$filename}"));  // auto-PNG
+    $pathNew  = public_path("signatures/{$filename}");   // ← simpan ke variabel
+    $img->save($pathNew);
 
+    /* 2) ── skor kemiripan via Python ─────────────────────────── */
+    $score = 1.0;         // default = cocok
+    $pathRef = $siswa->signature_data
+      ? public_path($siswa->signature_data)   // ← FIXED
+      : null;
+
+    if ($pathRef && File::exists($pathRef)) {
+      $proc = Process::run([
+        'python3',
+        base_path('scripts/compare_sig.py'),
+        $pathRef,
+        $pathNew,
+      ]);
+
+      $isMatch = $proc->successful();   // exit 0 = MATCH
+    }
+
+    /* 3) ── validasi threshold (0.82 ≈ 82 %) ─────────────────── */
+    if (! $isMatch) {
+      File::delete($pathNew);
+      return back()
+        ->with('warning', 'Tanda tangan kurang cocok, silakan ulangi.')
+        ->withInput();
+    }
     /* ──────────────────────────
        3) update DB
     ──────────────────────────*/

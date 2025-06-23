@@ -11,93 +11,69 @@
     <link href="<?php echo e(asset('sb-admin-2/vendor/fontawesome-free/css/all.min.css')); ?>" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
     <link href="<?php echo e(asset('sb-admin-2/css/sb-admin-2.min.css')); ?>" rel="stylesheet">
-    <link href="<?php echo e(asset('partialsGuru/style.css')); ?>" rel="stylesheet">
+    <link href="<?php echo e(asset('partialsAdmin/style.css')); ?>" rel="stylesheet">
+    <!-- <link href="<?php echo e(asset('partialsGuru/style.css')); ?>" rel="stylesheet"> -->
     <!-- DataTables -->
     <link href="<?php echo e(asset('sb-admin-2/vendor/datatables/dataTables.bootstrap4.min.css')); ?>" rel="stylesheet">
+
+    <?php echo $__env->yieldContent('style'); ?>
 </head>
 
-<?php echo $__env->yieldContent('style'); ?>
-</head>
+<body id="page-top">
+    <div id="wrapper">
+        <?php echo $__env->make('guru.partials.sidebarguru', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
 
-<body>
-    <div id="content-wrapper" class="d-flex flex-column">
-        <div id="content">
-            <?php echo $__env->make('guru.partials.topbar', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
+        <div id="content-wrapper" class="d-flex flex-column">
+            <div id="content">
+                <?php echo $__env->make('guru.partials.topbar', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
 
-            <!-- Sidebar -->
-            
-            <!-- Sidebar Navigation -->
-            <?php echo $__env->make('guru.partials.sidebarguru', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
+                
+                <?php if(session('success')): ?>
+                <div class="alert alert-success alert-dismissible fade show mx-3 mt-3" role="alert">
+                    <?php echo e(session('success')); ?>
 
-        </div>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+                <?php endif; ?>
 
-        <button id="toggleSidebarBtn" class="toggle-btn">
-            ☰
-        </button>
+                <?php if(session('warning')): ?>
+                <div class="alert alert-warning alert-dismissible fade show mx-3 mt-3" role="alert">
+                    <?php echo e(session('warning')); ?>
 
-        <!-- Main Content -->
-        <div class="content-container">
-            <!-- Content Will Be Yielded Here -->
-            <?php echo $__env->yieldContent('content'); ?>
-        </div>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+                <?php endif; ?>
 
-        <!-- Bootstrap 5 JS (Optional for components like modals or dropdowns) -->
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+                <?php if(session('error')): ?>
+                <div class="alert alert-danger alert-dismissible fade show mx-3 mt-3" role="alert">
+                    <?php echo e(session('error')); ?>
 
-        <!-- jQuery (Needed for DataTables) -->
-        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+                <?php endif; ?>
 
-        <script>
-            const sidebar = document.getElementById('sidebar');
-            const toggleSidebarBtn = document.getElementById('toggleSidebarBtn');
-
-            // Toggle sidebar visibility when the button is clicked
-            toggleSidebarBtn.addEventListener('click', () => {
-                sidebar.style.transform = sidebar.style.transform === 'translateX(0%)' ? 'translateX(-100%)' :
-                    'translateX(0%)';
-                // toggleSidebarBtn.style.color = toggleSidebarBtn.style.color === 'black' ? 'white' : 'black';
-
-                // Optionally, add a class to adjust main content position if needed
-                const mainContent = document.querySelector('.content-container');
-                mainContent.style.marginLeft = mainContent.style.marginLeft === '313px' ? '0' : '313px';
-            });
-        </script>
-
-        <?php echo $__env->make('guru.partials.logout-modal', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
-
-        <?php echo $__env->yieldContent('script'); ?>
-
-        <!-- Tambahkan sebelum closing tag </body> -->
-        <!-- Logout Modal-->
-        <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-            aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Yakin ingin keluar?</h5>
-                        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">×</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">Pilih "Logout" di bawah jika anda siap untuk mengakhiri sesi anda saat ini.
-                    </div>
-                    <div class="modal-footer">
-                        <button class="btn btn-secondary" type="button" data-dismiss="modal">Batal</button>
-                        <form action="<?php echo e(route('logout')); ?>" method="POST">
-                            <?php echo csrf_field(); ?>
-                            <button type="submit" class="btn btn-primary">Logout</button>
-                        </form>
-                    </div>
+                <div class="container-fluid">
+                    <?php echo $__env->yieldContent('content'); ?>
                 </div>
             </div>
-        </div>
 
-        <script src="<?php echo e(asset('sb-admin-2/vendor/jquery/jquery.min.js')); ?>"></script>
-        <script src="<?php echo e(asset('sb-admin-2/vendor/bootstrap/js/bootstrap.bundle.min.js')); ?>"></script>
-        <!-- DataTables JS -->
-        <script src="https://cdn.jsdelivr.net/npm/datatables.net@1.11.5/js/jquery.dataTables.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/datatables.net-bs5@1.11.5/js/dataTables.bootstrap5.min.js"></script>
+            <?php echo $__env->make('guru.partials.footer', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="<?php echo e(asset('sb-admin-2/vendor/jquery/jquery.min.js')); ?>"></script>
+    <script src="<?php echo e(asset('sb-admin-2/vendor/bootstrap/js/bootstrap.bundle.min.js')); ?>"></script>
+    <script src="<?php echo e(asset('sb-admin-2/vendor/jquery-easing/jquery.easing.min.js')); ?>"></script>
+    <script src="<?php echo e(asset('sb-admin-2/js/sb-admin-2.min.js')); ?>"></script>
+
+    <!-- DataTables -->
+    <script src="<?php echo e(asset('sb-admin-2/vendor/datatables/jquery.dataTables.min.js')); ?>"></script>
+    <script src="<?php echo e(asset('sb-admin-2/vendor/datatables/dataTables.bootstrap4.min.js')); ?>"></script>
+
+    <?php echo $__env->make('guru.partials.logout-modal', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
+
+    <?php echo $__env->yieldContent('script'); ?>
 </body>
 
-</html>
-<?php /**PATH /var/www/proyekAbsensiSmkWil/resources/views/guru/template/template.blade.php ENDPATH**/ ?>
+</html><?php /**PATH /var/www/proyekAbsensiSmkWil/resources/views/guru/template/template.blade.php ENDPATH**/ ?>

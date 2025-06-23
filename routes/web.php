@@ -14,10 +14,19 @@ use App\Http\Controllers\Guru\HomeController;
 use App\Http\Controllers\Guru\AttendanceController;
 use App\Http\Controllers\Guru\HistoryController;
 use \App\Http\Controllers\Guru\StudentController;
+use App\Http\Controllers\Siswa\HalamanSiswaController;
+use App\Http\Controllers\Walimurid\HalamanWaliMuridController;
+use Illuminate\Support\Facades\Process;
 
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+
+Route::get('/register',  [AuthController::class, 'showRegisterForm'])
+    ->name('register')
+    ->middleware('guest','throttle:10,1');          // hanya tamu
+Route::post('/register', [AuthController::class, 'register'])
+    ->middleware('guest');
 
 Route::get('/admin/dashboard', function () {
     return view('admin.dashboard');
@@ -65,3 +74,41 @@ Route::middleware(['auth', 'role:guru'])
         Route::put('/students/{siswa}', [StudentController::class, 'update'])
             ->name('students.update');
     });
+
+//=========================================SISWA=========================================
+Route::middleware(['auth', 'role:siswa'])
+    ->prefix('siswa')
+    ->name('siswa.')
+    ->group(function () {
+        Route::get('/home',  [HalamanSiswaController::class, 'index'])
+            ->name('siswa.dashboard');
+
+        Route::get('/history', [HalamanSiswaController::class, 'history'])
+            ->name('siswa.history');
+        Route::post('/generate-code',
+            [HalamanSiswaController::class, 'generateCode'])
+            ->middleware('throttle:5,1')
+            ->name('generate-code');
+    });
+
+
+//=========================================WALIMURID=========================================
+Route::middleware(['auth', 'role:walimurid'])
+    ->prefix('walimurid')
+    ->name('walimurid.')
+    ->group(function () {
+        Route::get('/home',  [HalamanWaliMuridController::class, 'index'])
+            ->name('walimurid.dashboard');
+        Route::get('/history', [HalamanWalimuridController::class, 'history'])
+            ->name('walimurid.history');
+    });
+
+
+//=========================================TES TANDATANGAN=========================================
+Route::get('/sig-test', function () {
+    $ref = public_path('signature_data/example2.png');
+    $new = public_path('signatures/test4.png');
+    $out = Process::run(['python3', base_path('scripts/compare_sig.py'), $ref, $new])->output();
+    return "Score = " . $out;
+});
+

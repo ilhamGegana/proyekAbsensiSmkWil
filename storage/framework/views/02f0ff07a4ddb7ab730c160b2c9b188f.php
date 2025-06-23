@@ -1,10 +1,10 @@
 <?php $__env->startSection('title', 'Dashboard'); ?>
-
+<?php $__env->startSection('page-title', 'Dashboard Guru'); ?>
 <?php $__env->startSection('content'); ?>
 <!-- Page Heading -->
 <div class="d-sm-flex align-items-center justify-content-between mb-4">
     <h1 class="h3 mb-0 text-gray-800">Dashboard</h1>
-    <a href="<?php echo e(route('guru.attendance')); ?>" class="d-none d-sm-inline-block btn btn-primary shadow-sm">
+    <a href="<?php echo e(route('guru.attendance')); ?>" class="d-none d-sm-inline-block btn btn-green shadow-sm ">
         <i class="fas fa-clipboard-list fa-sm text-white-50 mr-2"></i>Mulai Absensi
     </a>
 </div>

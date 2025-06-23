@@ -1,9 +1,9 @@
 @extends('guru.template.template')
 @section('title', 'Daftar Siswa & Status Absen')
-
+@section('page-title', 'Daftar Siswa & Status Absen')
 @section('content')
     <div class="card shadow mb-4">
-        <div class="card-header font-weight-bold text-primary">Daftar Siswa –
+        <div class="card-header font-weight-bold text-green-custom">Daftar Siswa –
             {{ \Carbon\Carbon::parse($date)->format('d/m/Y') }}</div>
 
         <div class="card-body">

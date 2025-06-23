@@ -1,0 +1,35 @@
+.bg-gradient-primary {
+    background-color: #077a33 !important;
+    background-image: none !important;
+}
+.text-green-custom {
+    color: #077a33 !important;
+}
+.btn-green {
+    background-color: #077a33;
+    color: #fff;
+}
+
+.btn-green:hover {
+    background-color: #06692c;
+    color: #fff;
+}
+
+
+.bg-animated {
+    background: linear-gradient(135deg,
+                #005a27 0%,   /* hijau tua  */
+                #36945d 25%,  /* hijau sedang */
+                #82ad94 50%,  /* hijau tua  */
+                #dfe8e3 75%,  /* hijau sedang */
+                #46504a 100%);
+    background-size: 300% 300%;
+    animation: shiftGradient 20s ease-in-out infinite;
+    min-height: 100vh; /* penting agar tutup penuh */
+}
+
+@keyframes shiftGradient {
+    0%   { background-position: 0% 50%; }
+    50%  { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}

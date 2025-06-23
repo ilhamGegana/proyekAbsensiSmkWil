@@ -1,10 +1,10 @@
 <?php $__env->startSection('title', 'Data Absensi'); ?>
-
+<?php $__env->startSection('page-title', 'Data Absensi'); ?>
 <?php $__env->startSection('content'); ?>
     <div class="card shadow mb-4">
         
         <div class="card-header d-flex justify-content-between align-items-center">
-            <h6 class="m-0 font-weight-bold text-primary">
+            <h6 class="m-0 font-weight-bold text-green-custom">
                 Absensi – <?php echo e($today->format('d/m/Y')); ?>
 
             </h6>

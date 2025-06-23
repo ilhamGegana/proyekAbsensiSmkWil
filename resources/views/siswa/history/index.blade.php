@@ -1,103 +1,17 @@
-{{-- @extends('guru/template/template')
-
-@section('style')
-  <style>
-    #attendanceTable {
-      font-size: 24px;
-      font-weight: 400;
-    }
-
-    .label-history {
-      font-size: 24px;
-      font-weight: 400;
-    }
-  </style>
-@endsection
-
-@section('content')
-  <div class="container-header mb-5">History</div>
-
-  <div class="container p-0">
-    <form action="{{ route('history') }}" method="get" id="formHistory">
-      <div class="row p-3 mb-3">
-        <div class="col-4">
-          <label for="date" class="label-history">Date</label>
-          <input type="date" name="date" id="date" class="form-control"
-            value="{{ request()->input('date', '') }}">
-        </div>
-        <div class="col-4">
-          <label for="name" class="label-history">Name</label>
-          <input type="text" name="name" id="name" class="form-control"
-            value="{{ request()->input('name', '') }}">
-        </div>
-        <div class="col-4">
-          <label for="class" class="label-history">Class</label>
-          <select name="class" id="class" class="form-control">
-            <option value="">Select Class</option>
-            @foreach ($classes as $class)
-              <option value="{{ $class->class }}" {{ request()->input('class') == $class->class ? 'selected' : '' }}>
-                {{ $class->class }}
-              </option>
-            @endforeach
-          </select>
-        </div>
-      </div>
-    </form>
-    <div class="table-responsive">
-      <table id="attendanceTable" class="table table-striped">
-        <thead>
-          <tr>
-            <th>Date</th>
-            <th>Name</th>
-            <th>Class</th>
-            <th>Status</th>
-            <th>Signature</th>
-          </tr>
-        </thead>
-        <tbody>
-          @foreach ($attendances as $attendance)
-            <tr>
-              <td>{{ $attendance->date }}</td>
-              <td>{{ $attendance->student->name }}</td>
-              <td>{{ $attendance->student->class }}</td>
-              <td><button class="btn btn-{{ $attendance->status }}">{{ ucwords($attendance->status) }}</button></td>
-              <td><button class="btn btn-signature">Signature</button></td>
-            </tr>
-          @endforeach
-        </tbody>
-      </table>
-    </div>
-  </div>
-@endsection
-
-@section('script')
-  <script>
-    $(document).ready(function() {
-      // Initialize DataTable
-      $('#attendanceTable').DataTable();
-
-      $('#date, #name, #class').change(() => {
-        $('#formHistory').submit();
-      });
-    });
-  </script>
-@endsection --}}
-
-
-@extends('guru.template.template')
+@extends('siswa.layouts.master')
 
 @section('title', 'History Absensi')
-@section('page-title', 'History Absensi')
+
 @section('content')
     <div class="card shadow mb-4">
         <div class="card-header d-flex justify-content-between align-items-center">
-            <h6 class="m-0 font-weight-bold text-green-custom">History Absensi</h6>
+            <h6 class="m-0 font-weight-bold text-primary">History Absensi</h6>
             {{-- tombol ekspor bisa ditambahkan nanti --}}
         </div>
 
         <div class="card-body">
             {{-- Filter --}}
-            <form action="{{ route('guru.history') }}" method="get" id="formHistory" class="mb-4">
+            <form action="{{ route('siswa.siswa.history') }}" method="get" id="formHistory" class="mb-4">
                 <div class="row">
                     <div class="col-md-4 mb-3">
                         <label class="small font-weight-bold">Tanggal</label>

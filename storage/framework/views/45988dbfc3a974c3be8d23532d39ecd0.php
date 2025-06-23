@@ -1,46 +1,57 @@
+
 <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+
+    <!-- Brand -->
     <a class="sidebar-brand d-flex align-items-center justify-content-center" href="<?php echo e(route('guru.home')); ?>">
-        <div class="sidebar-brand-icon rotate-n-15">
-            <i class="fas fa-school"></i>
+        <div class="sidebar-brand-icon">
+            <img src="<?php echo e(asset('images/logoWilangan.png')); ?>" alt="Logo SMK" style="height:40px;">
         </div>
         <div class="sidebar-brand-text mx-3">SMK WILANGAN</div>
     </a>
 
     <hr class="sidebar-divider my-0">
 
-    <li class="nav-item active">
+    <!-- DASHBOARD -->
+    <li class="nav-item <?php echo e(request()->routeIs('guru.home') ? 'active' : ''); ?>">
         <a class="nav-link" href="<?php echo e(route('guru.home')); ?>">
             <i class="fas fa-fw fa-tachometer-alt"></i>
-            <span>Home</span>
+            <span>Dashboard</span>
         </a>
     </li>
 
     <hr class="sidebar-divider">
 
-   
+    <!-- ABSENSI -->
+    <div class="sidebar-heading">Absensi</div>
 
-    <li class="nav-item">
+    <li class="nav-item <?php echo e(request()->routeIs('guru.attendance') ? 'active' : ''); ?>">
         <a class="nav-link" href="<?php echo e(route('guru.attendance')); ?>">
-            <i class="fas fa-user-graduate"></i>
-            <span>Attendance</span>
+            <i class="fas fa-user-check"></i>
+            <span>Mulai Absensi</span>
         </a>
     </li>
-    <li class="nav-item">
+
+    <li class="nav-item <?php echo e(request()->routeIs('guru.history') ? 'active' : ''); ?>">
         <a class="nav-link" href="<?php echo e(route('guru.history')); ?>">
-            <i class="fas fa-chalkboard-teacher"></i>
-            <span>History</span>
+            <i class="fas fa-history"></i>
+            <span>Riwayat Absensi</span>
         </a>
     </li>
-    <li class="nav-item">
+
+    <hr class="sidebar-divider">
+
+    <!-- DATA KELAS -->
+    <div class="sidebar-heading">Kelas & Siswa</div>
+
+    <li class="nav-item <?php echo e(request()->routeIs('guru.students.*') ? 'active' : ''); ?>">
         <a class="nav-link" href="<?php echo e(route('guru.students.index')); ?>">
             <i class="fas fa-users"></i>
-            <span>Students</span>
+            <span>Daftar Siswa</span>
         </a>
     </li>
-    <li class="nav-item">
-        <a class="nav-link" href="#">
-            <i class="fas fa-users-cog"></i>
-            <span>Setting</span>
-        </a>
-    </li>
-   <?php /**PATH /var/www/proyekAbsensiSmkWil/resources/views/guru/partials/sidebarguru.blade.php ENDPATH**/ ?>
+
+    
+
+    <hr class="sidebar-divider d-none d-md-block">
+</ul>
+<?php /**PATH /var/www/proyekAbsensiSmkWil/resources/views/guru/partials/sidebarguru.blade.php ENDPATH**/ ?>
