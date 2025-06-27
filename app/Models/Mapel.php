@@ -14,10 +14,16 @@ class Mapel extends Model
     protected $primaryKey = 'id';
     protected $fillable = [
         'nama_mapel',
+        'kode_mapel',
+        'id_guru',
     ];
 
     public function jadwal()
     {
         return $this->hasMany(JadwalPelajaran::class, 'id_mapel');
+    }
+    public function guru()
+    {
+        return $this->belongsTo(Guru::class, 'id_guru');
     }
 }

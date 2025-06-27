@@ -82,6 +82,12 @@
             <span>Absensi</span>
         </a>
     </li>
+    <li class="nav-item <?php echo e(request()->routeIs('rekap.*') ? 'active' : ''); ?>">
+    <a class="nav-link" href="<?php echo e(route('rekap.index')); ?>">
+        <i class="fas fa-file-pdf"></i>
+        <span>Rekap Absensi</span>
+    </a>
+</li>
 
     <hr class="sidebar-divider d-none d-md-block">
 </ul>

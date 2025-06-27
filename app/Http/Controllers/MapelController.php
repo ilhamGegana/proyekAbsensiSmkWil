@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Mapel;
 use Illuminate\Http\Request;
+use App\Models\Guru;
 
 class MapelController extends Controller
 {
@@ -12,8 +13,9 @@ class MapelController extends Controller
      */
     public function index()
     {
-        $mapel = Mapel::all();
-        return view('admin.mapel.index', compact('mapel'));
+        $mapel = Mapel::with('guru')->get();
+        $guru  = Guru::orderBy('nama_guru')->get();
+        return view('admin.mapel.index', compact('mapel', 'guru'));
     }
 
     /**
@@ -30,12 +32,19 @@ class MapelController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'nama_mapel' => 'required|max:100'
+            'nama_mapel' => ['required', 'string', 'max:100'],
+            'kode_mapel' => ['nullable', 'string', 'max:20', 'unique:mapel,kode_mapel'],
+            'id_guru'    => ['nullable', 'exists:guru,id'],
         ]);
 
-        Mapel::create($request->all());
+        // hanya kolom yang diterima fillable
+        Mapel::create(
+            $request->only(['nama_mapel', 'kode_mapel', 'id_guru'])
+        );
 
-        return redirect()->route('mapel.index')->with('success', 'Mata pelajaran berhasil ditambahkan.');
+        return redirect()
+            ->route('mapel.index')
+            ->with('success', 'Mata pelajaran berhasil ditambahkan.');
     }
 
     /**
@@ -51,6 +60,8 @@ class MapelController extends Controller
      */
     public function edit(Mapel $mapel)
     {
+        $guru = Guru::orderBy('nama_guru')->get();
+
         return view('admin.mapel.edit', compact('mapel'));
     }
 
@@ -60,12 +71,23 @@ class MapelController extends Controller
     public function update(Request $request, Mapel $mapel)
     {
         $request->validate([
-            'nama_mapel' => 'required|max:100'
+            'nama_mapel' => ['required', 'string', 'max:100'],
+            'kode_mapel' => [
+                'nullable',
+                'string',
+                'max:20',
+                'unique:mapel,kode_mapel,' . $mapel->id,
+            ],
+            'id_guru' => ['nullable', 'exists:guru,id'],
         ]);
 
-        $mapel->update($request->all());
+        $mapel->update(
+            $request->only(['nama_mapel', 'kode_mapel', 'id_guru'])
+        );
 
-        return redirect()->route('mapel.index')->with('success', 'Mata pelajaran berhasil diperbarui.');
+        return redirect()
+            ->route('mapel.index')
+            ->with('success', 'Mata pelajaran berhasil diperbarui.');
     }
 
     /**

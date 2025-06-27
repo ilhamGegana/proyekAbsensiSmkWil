@@ -7,6 +7,7 @@ use App\Models\JadwalPelajaran;
 use App\Models\Guru;
 use App\Models\Kelas;
 use App\Models\Mapel;
+use Illuminate\Validation\Rule;
 
 class JadwalPelajaranController extends Controller
 {
@@ -15,11 +16,15 @@ class JadwalPelajaranController extends Controller
      */
     public function index()
     {
-        $jadwalPelajaran = JadwalPelajaran::with(['guru', 'mapel', 'kelas'])->get();
-        $guru = Guru::all();
-        $mapel = Mapel::all();
-        $kelas = Kelas::all();
-        return view('admin.jadwalPelajaran.index', compact('jadwalPelajaran', 'guru', 'mapel', 'kelas'));
+        $jadwalPelajaran = JadwalPelajaran::with(['guru', 'mapel', 'kelas'])
+            ->orderBy('hari')->orderBy('jam_ke')->get();   // tampilkan SEMUA (aktif & non-aktif)
+
+        return view('admin.jadwalPelajaran.index', [
+            'jadwalPelajaran' => $jadwalPelajaran,
+            'guru'  => Guru::all(),
+            'mapel' => Mapel::all(),
+            'kelas' => Kelas::all(),
+        ]);
     }
 
     /**
@@ -38,18 +43,14 @@ class JadwalPelajaranController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'hari' => 'required|max:20',
-            'id_guru' => 'required|exists:guru,id',
-            'id_mapel' => 'required|exists:mapel,id',
-            'id_kelas' => 'required|exists:kelas,id',
-        ]);
+        $this->validateForm($request);
 
-        JadwalPelajaran::create($request->all());
+        $data = $request->only(['hari', 'jam_ke', 'id_mapel', 'id_kelas']);
+        $data['id_guru'] = Mapel::findOrFail($data['id_mapel'])->id_guru;
+        JadwalPelajaran::create($data);
 
-        return redirect()->route('jadwalPelajaran.index')->with('success', 'Jadwal pelajaran berhasil ditambahkan.');
+        return back()->with('success', 'Jadwal berhasil ditambahkan.');
     }
-
     /**
      * Display the specified resource.
      */
@@ -74,28 +75,64 @@ class JadwalPelajaranController extends Controller
      */
     public function update(Request $request, JadwalPelajaran $jadwalPelajaran)
     {
-        $request->validate([
-            'hari' => 'required|max:20',
-            'id_guru' => 'required|exists:guru,id',
-            'id_mapel' => 'required|exists:mapel,id',
-            'id_kelas' => 'required|exists:kelas,id',
-        ]);
+        $this->validateForm($request, $jadwalPelajaran->id);
 
-        $jadwalPelajaran->update($request->all());
+        $data = $request->only(['hari', 'jam_ke', 'id_mapel', 'id_kelas', 'is_active']);
+        $data['id_guru']   = Mapel::findOrFail($data['id_mapel'])->id_guru;
+        $data['is_active'] = $request->has('is_active');
 
-        return redirect()->route('jadwalPelajaran.index')->with('success', 'Jadwal pelajaran berhasil diperbarui.');
+        $jadwalPelajaran->update($data);
+
+        return back()->with('success', 'Jadwal berhasil diperbarui.');
     }
+    public function toggle(JadwalPelajaran $jadwalPelajaran)
+    {
+        $jadwalPelajaran->update(['is_active' => ! $jadwalPelajaran->is_active]);
 
+        return back()->with(
+            'success',
+            $jadwalPelajaran->is_active
+                ? 'Jadwal di-aktifkan.'
+                : 'Jadwal di-nonaktifkan.'
+        );
+    }
     /**
      * Remove the specified resource from storage.
      */
     public function destroy(JadwalPelajaran $jadwalPelajaran)
     {
+        // ada absensi → non-aktifkan saja
         if ($jadwalPelajaran->absensi()->exists()) {
-            return back()->with('error', 'Jadwal sudah digunakan di absensi.');
+            $jadwalPelajaran->update(['is_active' => false]);
+
+            return back()->with(
+                'success',
+                'Jadwal sudah terpakai; status di-nonaktifkan.'
+            );
         }
 
+        // belum terpakai → soft delete
         $jadwalPelajaran->delete();
+
         return back()->with('success', 'Jadwal pelajaran berhasil dihapus.');
+    }
+    private function validateForm(Request $r, $ignoreId = null): void
+    {
+        $r->validate([
+            'hari'   => ['required', 'max:20'],
+            'jam_ke' => [
+                'required',
+                'integer',
+                'min:0',
+                'max:20',
+                Rule::unique('jadwal_pelajaran')
+                    ->where(fn($q) => $q->where('hari', $r->hari)
+                        ->where('id_kelas', $r->id_kelas))
+                    ->ignore($ignoreId),
+            ],
+            'id_mapel' => ['required', 'exists:mapel,id'],
+            'id_kelas' => ['required', 'exists:kelas,id'],
+            'is_active' => ['sometimes', 'boolean'],
+        ]);
     }
 }

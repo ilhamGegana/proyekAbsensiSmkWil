@@ -17,6 +17,7 @@ use \App\Http\Controllers\Guru\StudentController;
 use App\Http\Controllers\Siswa\HalamanSiswaController;
 use App\Http\Controllers\Walimurid\HalamanWaliMuridController;
 use Illuminate\Support\Facades\Process;
+use App\Http\Controllers\RekapAdminController;
 
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [AuthController::class, 'login']);
@@ -24,7 +25,7 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 Route::get('/register',  [AuthController::class, 'showRegisterForm'])
     ->name('register')
-    ->middleware('guest','throttle:10,1');          // hanya tamu
+    ->middleware('guest', 'throttle:10,1');          // hanya tamu
 Route::post('/register', [AuthController::class, 'register'])
     ->middleware('guest');
 
@@ -39,10 +40,16 @@ Route::prefix('admin')->group(function () {
     Route::resource('kelas', KelasController::class)->parameters([
         'kelas' => 'kelas'
     ]);
+    Route::patch(
+        '/jadwal/{jadwalPelajaran}/toggle',
+        [JadwalPelajaranController::class, 'toggle']
+    )->name('jadwalPelajaran.toggle');
     Route::resource('mapel', MapelController::class);
     Route::resource('user', UserController::class);
     Route::resource('absensi', AbsensiController::class);
     Route::resource('jadwalPelajaran', JadwalPelajaranController::class);
+    Route::get('/rekap', [RekapAdminController::class, 'index'])->name('rekap.index');
+    Route::get('/rekap/download', [RekapAdminController::class, 'download'])->name('rekap.download');
 });
 
 Route::get('/user/terkait/{role}', [UserController::class, 'getTerkait']);
@@ -85,8 +92,10 @@ Route::middleware(['auth', 'role:siswa'])
 
         Route::get('/history', [HalamanSiswaController::class, 'history'])
             ->name('siswa.history');
-        Route::post('/generate-code',
-            [HalamanSiswaController::class, 'generateCode'])
+        Route::post(
+            '/generate-code',
+            [HalamanSiswaController::class, 'generateCode']
+        )
             ->middleware('throttle:5,1')
             ->name('generate-code');
     });
@@ -111,4 +120,3 @@ Route::get('/sig-test', function () {
     $out = Process::run(['python3', base_path('scripts/compare_sig.py'), $ref, $new])->output();
     return "Score = " . $out;
 });
-

@@ -8,7 +8,10 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class Notifikasi extends Model
 {
     use HasFactory;
-
+    protected $casts = [
+        'response'    => 'array',     // JSON → array otomatis
+        'waktu_kirim' => 'datetime',  // bantu parsing & format
+    ];
     protected $table = 'notifikasi';
     protected $primaryKey = 'id';
     protected $fillable = [
@@ -17,7 +20,8 @@ class Notifikasi extends Model
         'pesan',
         'waktu_kirim',
         'tujuan',
-        'status_kirim',
+        'response',
+        'status_kirim'
     ];
 
     public function guru()

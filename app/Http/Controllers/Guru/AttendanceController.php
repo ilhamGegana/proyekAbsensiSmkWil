@@ -2,143 +2,169 @@
 
 namespace App\Http\Controllers\Guru;
 
-use Intervention\Image\Laravel\Facades\Image;
 use App\Http\Controllers\Controller;
-use App\Models\Absensi;
-use App\Models\JadwalPelajaran;
+use App\Models\{Absensi, JadwalPelajaran, Siswa};
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Process;
 use Illuminate\Support\Facades\File;
-
+use Intervention\Image\Laravel\Facades\Image;
 
 class AttendanceController extends Controller
 {
-  public function index(Request $request)
-  {
-    $guru   = Auth::user()->guru;               // guru yang login
-    $today  = Carbon::today();
+    /* ================================================================
+     |  HALAMAN DAFTAR ABSENSI (pilih jadwal, lihat siswa & status)
+     |================================================================ */
+    public function index(Request $request)
+    {
+        $guru   = Auth::user()->guru;                 // guru yang login
+        $today  = Carbon::today();                    // tanggal hari ini
+        $hari   = $today->isoFormat('dddd');          // Senin, Selasa, ...
 
-    // semua jadwal guru
-    $schedules = JadwalPelajaran::with('kelas:id,nama_kelas', 'mapel:id,nama_mapel')
-      ->where('id_guru', $guru->id)->get();
+        /* ---------- Jadwal aktif milik guru (hari apa pun) ---------- */
+        $schedules = JadwalPelajaran::aktif()
+            ->with('kelas:id,nama_kelas', 'mapel:id,nama_mapel')
+            ->where('id_guru', $guru->id)
+            ->orderBy('hari')
+            ->orderBy('jam_ke')
+            ->get();
 
-    if ($schedules->isEmpty()) {
-      return view('guru.attendance.index', [
-        'students'          => collect(),
-        'absensiMap'        => [],
-        'schedules'         => collect(),
-        'selectedScheduleId' => null,
-        'today'             => $today,
-      ]);
+        // Jika guru belum memiliki jadwal sama sekali
+        if ($schedules->isEmpty()) {
+            return view('guru.attendance.index', [
+                'students'           => collect(),
+                'absensiMap'         => [],
+                'schedules'          => collect(),
+                'selectedScheduleId' => null,
+                'today'              => $today,
+            ]);
+        }
+
+        /* ---------- Tentukan jadwal terpilih ---------- */
+        $selectedScheduleId = $request->input('jadwal', $schedules->first()->id);
+        $selectedSchedule   = $schedules->firstWhere('id', $selectedScheduleId);
+
+        // Jika jadwal yang diminta tidak valid (mis. sudah non-aktif)
+        if (! $selectedSchedule) {
+            return back()->with('warning', 'Jadwal tidak ditemukan atau non-aktif.');
+        }
+
+        /* ---------- Ambil siswa pada kelas jadwal ---------- */
+        $students = Siswa::with('kelas:id,nama_kelas')
+            ->where('id_kelas', $selectedSchedule->id_kelas)
+            ->orderBy('nama_siswa')
+            ->get();
+
+        /* ---------- Ambil absensi hari ini pada jadwal ---------- */
+        $absensiMap = Absensi::where('id_jadwal', $selectedScheduleId)
+            ->whereDate('tgl_waktu_absen', $today)
+            ->get()
+            ->keyBy('id_siswa');   // [id_siswa => Absensi]
+
+        return view('guru.attendance.index', compact(
+            'students',
+            'absensiMap',
+            'schedules',
+            'selectedScheduleId',
+            'today'
+        ));
     }
 
-    // jadwal terpilih
-    $selectedScheduleId = $request->input('jadwal', $schedules->first()->id);
-    $selectedSchedule   = $schedules->firstWhere('id', $selectedScheduleId);
+    /* ================================================================
+     |  FORM TANDA TANGAN (guru → siswa)
+     |================================================================ */
+    public function signForm(Request $request, Siswa $siswa)
+    {
+        $request->validate([
+            'jadwal' => ['required', Rule::exists('jadwal_pelajaran', 'id')],
+            'date'   => ['nullable', 'date'],
+        ]);
 
-    // --- siswa dari kelas jadwal ---
-    $students = \App\Models\Siswa::with('kelas:id,nama_kelas')
-      ->where('id_kelas', $selectedSchedule->id_kelas)
-      ->orderBy('nama_siswa')
-      ->get();
+        $jadwalId = $request->input('jadwal');
+        $date     = $request->input('date', Carbon::today()->toDateString());
 
-    // --- ambil absensi existing (keyed by id_siswa) ---
-    $absensiMap = Absensi::where('id_jadwal', $selectedScheduleId)
-      ->whereDate('tgl_waktu_absen', $today)
-      ->get()
-      ->keyBy('id_siswa');     // → [id_siswa => Absensi]
+        // pastikan jadwal masih aktif & siswa di kelas tsb.
+        $jadwal = JadwalPelajaran::aktif()->findOrFail($jadwalId);
 
-    return view('guru.attendance.index', compact(
-      'students',
-      'absensiMap',
-      'schedules',
-      'selectedScheduleId',
-      'today'
-    ));
-  }
+        // CUKUP ambil absensi kalau sudah ada;
+        $absensi = Absensi::where([
+            'id_siswa'        => $siswa->id,
+            'id_jadwal'       => $jadwalId,
+            'tgl_waktu_absen' => $date,
+        ])->first();
 
-  public function signForm(Request $request, \App\Models\Siswa $siswa)
-  {
-    $jadwalId = $request->input('jadwal');
-    $date     = $request->input('date', Carbon::today()->toDateString());
-
-    $absensi = Absensi::firstOrCreate(
-      ['id_siswa' => $siswa->id, 'id_jadwal' => $jadwalId, 'tgl_waktu_absen' => $date],
-      ['status_absen' => 'hadir']   // default status
-    );
-
-    return view('guru.attendance.sign', compact('siswa', 'absensi', 'jadwalId', 'date'));
-  }
-
-  public function signStore(Request $request, \App\Models\Siswa $siswa)
-  {
-    $request->validate([
-      'signature' => 'required|string'      // base64
-    ]);
-
-    $jadwalId = $request->input('jadwal');
-    $date     = $request->input('date', Carbon::today()->toDateString());
-
-    /* ──────────────────────────
-       1) baca Data-URI langsung
-    ──────────────────────────*/
-    $dataUri = str_replace(' ', '+', $request->signature);
-
-    $img = Image::read($dataUri)
-      ->trim()                        // buang tepi transparan
-      ->resizeCanvas(                 // v3: 4 argumen
-        600,                       // width
-        200,                       // height
-        'ffffff',                  // anchor
-        'center'                   // bg putih
-      );
-
-    /* ──────────────────────────
-       2) simpan
-    ──────────────────────────*/
-    $filename = 'sig_' . $siswa->id . '_' . now()->timestamp . '.png';
-    $pathNew  = public_path("signatures/{$filename}");   // ← simpan ke variabel
-    $img->save($pathNew);
-
-    /* 2) ── skor kemiripan via Python ─────────────────────────── */
-    $score = 1.0;         // default = cocok
-    $pathRef = $siswa->signature_data
-      ? public_path($siswa->signature_data)   // ← FIXED
-      : null;
-
-    if ($pathRef && File::exists($pathRef)) {
-      $proc = Process::run([
-        'python3',
-        base_path('scripts/compare_sig.py'),
-        $pathRef,
-        $pathNew,
-      ]);
-
-      $isMatch = $proc->successful();   // exit 0 = MATCH
+        return view(
+            'guru.attendance.sign',
+            compact('siswa', 'absensi', 'jadwalId', 'date')
+        );
     }
 
-    /* 3) ── validasi threshold (0.82 ≈ 82 %) ─────────────────── */
-    if (! $isMatch) {
-      File::delete($pathNew);
-      return back()
-        ->with('warning', 'Tanda tangan kurang cocok, silakan ulangi.')
-        ->withInput();
-    }
-    /* ──────────────────────────
-       3) update DB
-    ──────────────────────────*/
-    Absensi::updateOrCreate(
-      [
-        'id_siswa'        => $siswa->id,
-        'id_jadwal'       => $request->jadwal,
-        'tgl_waktu_absen' => $request->date ?? today(),
-      ],
-      ['signature_ref' => $filename]
-    );
+    /* ================================================================
+     |  SIMPAN TANDA TANGAN
+     |================================================================ */
+    public function signStore(Request $request, Siswa $siswa)
+    {
+        $request->validate([
+            'signature' => 'required|string',          // base64
+            'jadwal'    => ['required', Rule::exists('jadwal_pelajaran', 'id')],
+            'date'      => ['nullable', 'date'],
+        ]);
 
-    return redirect()->route('guru.attendance', ['jadwal' => $jadwalId])
-      ->with('success', 'Tanda tangan tersimpan.');
-  }
+        $jadwalId = $request->input('jadwal');
+        $date     = $request->input('date', Carbon::today()->toDateString());
+
+        /* ---------- 1. Decode tanda tangan baru ---------- */
+        $dataUri  = str_replace(' ', '+', $request->signature);
+        $img      = Image::read($dataUri)->trim()->resizeCanvas(600, 200, 'ffffff', 'center');
+        $filename = 'sig_' . $siswa->id . '_' . now()->timestamp . '.png';
+        $pathNew  = public_path("signatures/{$filename}");
+        $img->save($pathNew);
+
+        /* ---------- 2. Cek keberadaan tanda tangan referensi ---------- */
+        $pathRef = $siswa->signature_data ? public_path($siswa->signature_data) : null;
+
+        if (! $pathRef || ! File::exists($pathRef)) {
+            // hapus file baru agar tidak menumpuk
+            File::delete($pathNew);
+
+            return back()
+                ->with('warning', 'Mohon tanda tangan dahulu di akun siswa.')
+                ->withInput();
+        }
+
+        /* ---------- 3. Bandingkan dengan referensi ---------- */
+        $proc    = Process::run([
+            'python3',
+            base_path('scripts/compare_sig.py'),
+            $pathRef,
+            $pathNew,
+        ]);
+        $isMatch = $proc->successful();
+
+        if (! $isMatch) {
+            File::delete($pathNew);
+            return back()
+                ->with('warning', 'Tanda tangan kurang cocok, silakan ulangi.')
+                ->withInput();
+        }
+
+        /* ---------- 4. Simpan / perbarui record absensi ---------- */
+        Absensi::updateOrCreate(
+            [
+                'id_siswa'        => $siswa->id,
+                'id_jadwal'       => $jadwalId,
+                'tgl_waktu_absen' => $date,
+            ],
+            [
+                'status_absen'  => 'hadir',      // ← sekarang baru di-set hadir
+                'signature_ref' => $filename,
+            ]
+        );
+
+        return redirect()
+            ->route('guru.attendance', ['jadwal' => $jadwalId])
+            ->with('success', 'Tanda tangan tersimpan.');
+    }
 }
