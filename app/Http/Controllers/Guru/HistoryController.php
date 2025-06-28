@@ -12,33 +12,44 @@ class HistoryController extends Controller
 {
     public function index(Request $request)
     {
-        // --- query builder dasar ---
         $attendances = Absensi::with(['siswa.kelas']);
 
-        // filter tanggal (kolom tgl_waktu_absen)
-        if ($request->filled('date')) {
-            $attendances->whereDate('tgl_waktu_absen', $request->date);
+        /* ─── FILTER TANGGAL DARI – SAMPAI ─── */
+        $from = $request->input('from');   // contoh: 2025-06-01
+        $to   = $request->input('to');     // contoh: 2025-06-30
+
+        // jika hanya "from" → >= from
+        if ($from && !$to) {
+            $attendances->whereDate('tgl_waktu_absen', '>=', $from);
+        }
+        // jika hanya "to"   → <= to
+        elseif ($to && !$from) {
+            $attendances->whereDate('tgl_waktu_absen', '<=', $to);
+        }
+        // jika keduanya     → between
+        elseif ($from && $to) {
+            $attendances->whereBetween('tgl_waktu_absen', [$from, $to]);
         }
 
-        // filter nama siswa
+        /* ─── FILTER NAMA & KELAS (tidak berubah) ─── */
         if ($request->filled('name')) {
-            $attendances->whereHas('siswa', function ($q) use ($request) {
-                $q->where('nama_siswa', 'like', '%' . $request->name . '%');
-            });
+            $attendances->whereHas('siswa', fn($q) =>
+            $q->where('nama_siswa', 'like', '%' . $request->name . '%'));
         }
 
-        // filter kelas (berdasar id_kelas)
         if ($request->filled('class')) {
-            $attendances->whereHas('siswa', function ($q) use ($request) {
-                $q->where('id_kelas', $request->class);
-            });
+            $attendances->whereHas('siswa', fn($q) =>
+            $q->where('id_kelas', $request->class));
         }
 
         $attendances = $attendances->get();
 
-        // daftar kelas untuk dropdown
         $classes = Kelas::select('id', 'nama_kelas')->orderBy('nama_kelas')->get();
 
-        return view('guru.history.index', compact('attendances', 'classes'));
+        return view('guru.history.index', compact('attendances', 'classes'))
+            ->with([
+                'from' => $from,
+                'to'   => $to,
+            ]);
     }
 }

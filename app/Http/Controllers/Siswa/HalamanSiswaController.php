@@ -8,45 +8,50 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Http\JsonResponse;
+use Intervention\Image\Laravel\Facades\Image;
 
 class HalamanSiswaController extends Controller
 {
     public function index()
     {
-        return view('siswa.home.index');
+        $siswa = Auth::user()->siswa;   // relasi user → siswa
+        return view('siswa.home.index', compact('siswa'));
     }
 
     public function history(Request $request)
     {
-        // --- query builder dasar ---
-        $attendances = Absensi::with(['siswa.kelas']);
+        Log::debug('HIST', $request->all());
+        $siswa = Auth::user()->siswa;        // siswa yang login
 
-        // filter tanggal (kolom tgl_waktu_absen)
-        if ($request->filled('date')) {
-            $attendances->whereDate('tgl_waktu_absen', $request->date);
+        /* ─── query dasar: hanya id_siswa ini ─── */
+        $attendances = Absensi::with('siswa.kelas')
+            ->where('id_siswa', $siswa->id);
+
+        /* ─── filter range tanggal ─── */
+        $from = $request->input('from');   // yyyy-mm-dd
+        $to   = $request->input('to');
+
+        if ($from && !$to) {
+            // hanya ‘dari’ → persis tanggal itu
+            $attendances->whereDate('tgl_waktu_absen', $from);
+        } elseif ($to && !$from) {
+            // hanya ‘sampai’ → persis tanggal itu
+            $attendances->whereDate('tgl_waktu_absen', $to);
+        } elseif ($from && $to) {
+            // keduanya → antara
+            $attendances->whereBetween('tgl_waktu_absen', [$from, $to]);
         }
 
-        // filter nama siswa
-        if ($request->filled('name')) {
-            $attendances->whereHas('siswa', function ($q) use ($request) {
-                $q->where('nama_siswa', 'like', '%' . $request->name . '%');
-            });
-        }
+        $attendances = $attendances->orderBy('tgl_waktu_absen', 'desc')->get();
 
-        // filter kelas (berdasar id_kelas)
-        if ($request->filled('class')) {
-            $attendances->whereHas('siswa', function ($q) use ($request) {
-                $q->where('id_kelas', $request->class);
-            });
-        }
-
-        $attendances = $attendances->get();
-
-        // daftar kelas untuk dropdown
-        $classes = Kelas::select('id', 'nama_kelas')->orderBy('nama_kelas')->get();
-
-        return view('siswa.history.index', compact('attendances', 'classes'));
+        /* kelas dropdown tidak perlu — hapus saja */
+        return view('siswa.history.index', [
+            'attendances' => $attendances,
+            'from'        => $from,
+            'to'          => $to,
+        ]);
     }
 
     /** POST /siswa/generate-code */
@@ -76,5 +81,37 @@ class HalamanSiswaController extends Controller
             'code'    => $code,
             'expires' => $wali->reg_code_expires?->format('d-m-Y H:i'),
         ]);
+    }
+    public function storeSignature(Request $request): JsonResponse
+    {
+        try {
+            $request->validate([
+                'signature' => 'required|string',
+            ]);
+
+            $siswa = Auth::user()->siswa;
+
+            $dataUri  = str_replace(' ', '+', $request->signature);
+            $img      = Image::read($dataUri)
+                ->trim()
+                ->resizeCanvas(600, 200, 'ffffff', 'center');
+
+            $filename = 'sigref_' . $siswa->id . '_' . now()->timestamp . '.png';
+            $relative = "signature_data/{$filename}";
+
+            $img->save(public_path($relative));  // simpan ke public/
+
+            $siswa->update(['signature_data' => $relative]);
+
+            return response()->json([
+                'ok'   => true,
+                'path' => asset($relative)
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'ok' => false,
+                'message' => 'Gagal menyimpan tanda tangan: ' . $e->getMessage()
+            ], 500);
+        }
     }
 }

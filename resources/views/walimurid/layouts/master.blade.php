@@ -73,12 +73,10 @@
             });
         });
     </script>
-    <script>
-        $(document).ready(function() {
-            $('#dataTable').DataTable();
-        });
-    </script>
+    
     @include('walimurid.partials.logout-modal')
+
+    @stack('scripts')
 </body>
 
 </html>

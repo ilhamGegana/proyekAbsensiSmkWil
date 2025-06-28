@@ -1,4 +1,5 @@
 @extends('guru.template.template')
+
 @section('title','Daftar Siswa & Status Absen')
 @section('page-title','Daftar Siswa & Status Absen')
 
@@ -9,29 +10,50 @@
     </div>
 
     <div class="card-body">
-        {{-- ═════ FILTER ═════ --}}
+
+        {{-- ①  ─── KALAU TIDAK ADA JADWAL ───────────────────────── --}}
+        @if ($schedules->isEmpty())
+        <div class="alert alert-info">
+            Tidak ada jadwal aktif pada {{ \Carbon\Carbon::parse($date)->isoFormat('dddd') }}.
+            Silakan pilih tanggal lain.
+        </div>
+
+        {{-- tetap tampilkan input tanggal agar guru bisa ganti --}}
+        <form id="formFilter" action="{{ route('guru.students.index') }}" method="get">
+            <div class="row">
+                <div class="col-md-2 mb-2">
+                    <input type="date" name="date" id="date"
+                        class="form-control form-control-sm"
+                        value="{{ $date }}">
+                </div>
+            </div>
+        </form>
+        @else
+        {{-- ②  ─── FILTER NORMAL (jadwal tersedia) ───────────────── --}}
         <form action="{{ route('guru.students.index') }}" id="formFilter" method="get" class="mb-4">
             <div class="row">
-                {{-- ▼ JADWAL ─────────────────────────────────────── --}}
-                <div class="col-md-3 mb-2">
+                {{-- ▼ JADWAL --}}
+                <div class="col-md-4 mb-2">
                     <select name="jadwal" id="jadwal" class="form-control form-control-sm">
                         @foreach ($schedules as $sch)
                         <option value="{{ $sch->id }}"
                             {{ $sch->id == $selectedScheduleId ? 'selected' : '' }}>
-                            {{ $sch->kelas->nama_kelas }} - {{ $sch->mapel->nama_mapel }}
+                            {{ $sch->kelas->nama_kelas }}
+                            - {{ $sch->mapel->nama_mapel }}
+                            - Jam ke-{{ $sch->jam_ke }}
                         </option>
                         @endforeach
                     </select>
                 </div>
 
-                {{-- ▼ TANGGAL ────────────────────────────────────── --}}
+                {{-- ▼ TANGGAL --}}
                 <div class="col-md-2 mb-2">
                     <input type="date" name="date" id="date"
                         class="form-control form-control-sm"
                         value="{{ $date }}">
                 </div>
 
-                {{-- ▼ CARI NAMA ───────────────────────────────────── --}}
+                {{-- ▼ CARI NAMA --}}
                 <div class="col-md-3 mb-2">
                     <input type="text" name="name" id="name"
                         class="form-control form-control-sm"
@@ -41,7 +63,7 @@
             </div>
         </form>
 
-        {{-- ═════ TABEL ═════ --}}
+        {{-- ③  ─── TABEL SISWA ───────────────────────────────────── --}}
         <div class="table-responsive">
             <table class="table table-bordered" id="dataTable" width="100%">
                 <thead>
@@ -60,8 +82,8 @@
                     $absen = $student->absensi->first();
                     $status = $absen->status_absen ?? 'Belum';
                     $color = [
-                    'hadir' => 'success','sakit'=>'info','izin'=>'warning',
-                    'alpha' => 'danger','Belum'=>'secondary'
+                    'hadir'=>'success','sakit'=>'info','izin'=>'warning',
+                    'alpha'=>'danger','Belum'=>'secondary'
                     ][$status] ?? 'secondary';
                     @endphp
                     <tr>
@@ -73,12 +95,11 @@
                             <span class="btn btn-sm btn-{{ $color }}">{{ ucfirst($status) }}</span>
                         </td>
                         <td class="text-center">
-                            {{-- ► link Edit membawa jadwal & date --}}
                             <a href="{{ route('guru.students.edit', [
-                    $student->id,
-                    'jadwal' => $selectedScheduleId,
-                    'date'   => $date
-              ]) }}" class="btn btn-sm btn-secondary">
+                                        $student->id,
+                                        'jadwal' => $selectedScheduleId,
+                                        'date'   => $date
+                                    ]) }}" class="btn btn-sm btn-secondary">
                                 <i class="fas fa-edit"></i> Edit
                             </a>
                         </td>
@@ -87,11 +108,13 @@
                 </tbody>
             </table>
         </div>
+        @endif {{-- end if schedules->isEmpty --}}
     </div>
 </div>
 @endsection
 
-@section('script')
+
+@push('scripts') {{-- ganti section jadi push agar tidak bentrok --}}
 <script>
     $(function() {
         $('#dataTable').DataTable({
@@ -99,8 +122,7 @@
             responsive: true
         });
 
-        // setiap filter berubah → submit
         $('#jadwal,#date,#name').on('change', () => $('#formFilter').submit());
     });
 </script>
-@endsection
+@endpush

@@ -29,19 +29,19 @@
                 <?php echo $__env->make('admin.partials.topbar', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
                 
                 <?php if(session('success')): ?>
-                    <div class="alert alert-success alert-dismissible fade show mx-3 mt-3" role="alert">
-                        <?php echo e(session('success')); ?>
+                <div class="alert alert-success alert-dismissible fade show mx-3 mt-3" role="alert">
+                    <?php echo e(session('success')); ?>
 
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
                 <?php endif; ?>
 
                 <?php if(session('error')): ?>
-                    <div class="alert alert-danger alert-dismissible fade show mx-3 mt-3" role="alert">
-                        <?php echo e(session('error')); ?>
+                <div class="alert alert-danger alert-dismissible fade show mx-3 mt-3" role="alert">
+                    <?php echo e(session('error')); ?>
 
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
                 <?php endif; ?>
                 <div class="container-fluid">
                     <?php echo $__env->yieldContent('content'); ?>
@@ -65,13 +65,24 @@
     <script src="<?php echo e(asset('sb-admin-2/vendor/datatables/jquery.dataTables.min.js')); ?>"></script>
     <script src="<?php echo e(asset('sb-admin-2/vendor/datatables/dataTables.bootstrap4.min.js')); ?>"></script>
     <script>
-        $(document).on('shown.bs.offcanvas shown.bs.modal', function() {
+        $(document).ready(function() {
+            // Untuk halaman biasa
             $('.select2').select2({
                 width: '100%',
                 placeholder: 'Pilih atau cari data',
                 allowClear: true,
                 minimumResultsForSearch: 0,
-                dropdownParent: $('.offcanvas.show')
+            });
+
+            // Untuk elemen di dalam offcanvas/modal
+            $(document).on('shown.bs.offcanvas shown.bs.modal', function() {
+                $('.select2').select2({
+                    width: '100%',
+                    placeholder: 'Pilih atau cari data',
+                    allowClear: true,
+                    minimumResultsForSearch: 0,
+                    dropdownParent: $('.offcanvas.show')
+                });
             });
         });
     </script>
@@ -83,5 +94,4 @@
     <?php echo $__env->make('admin.partials.logout-modal', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
 </body>
 
-</html>
-<?php /**PATH /var/www/proyekAbsensiSmkWil/resources/views/admin/layouts/master.blade.php ENDPATH**/ ?>
+</html><?php /**PATH /var/www/proyekAbsensiSmkWil/resources/views/admin/layouts/master.blade.php ENDPATH**/ ?>

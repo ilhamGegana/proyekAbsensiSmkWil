@@ -6,6 +6,7 @@ use App\Models\Kelas;
 use App\Models\Absensi;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 
 class HalamanWaliMuridController extends Controller
 {
@@ -14,35 +15,53 @@ class HalamanWaliMuridController extends Controller
         return view('walimurid.home.index');
     }
 
-     public function history(Request $request)
+    public function history(Request $request)
     {
-        // --- query builder dasar ---
-        $attendances = Absensi::with(['siswa.kelas']);
+        $wali = Auth::user()->walimurid;            // wali yg login
+        $childIds = $wali->siswa()->pluck('id');        // id semua anak
 
-        // filter tanggal (kolom tgl_waktu_absen)
-        if ($request->filled('date')) {
-            $attendances->whereDate('tgl_waktu_absen', $request->date);
+        /* ─── query dasar: hanya anak wali ini ─── */
+        $attendances = Absensi::with('siswa.kelas')
+            ->whereIn('id_siswa', $childIds);
+
+        /* ─── FILTER TANGGAL: sama persis dg guru/siswa ─── */
+        $from = $request->input('from');   // yyyy-mm-dd
+        $to   = $request->input('to');
+
+        if ($from && !$to) {
+            $attendances->whereDate('tgl_waktu_absen', $from);
+        } elseif ($to && !$from) {
+            $attendances->whereDate('tgl_waktu_absen', $to);
+        } elseif ($from && $to) {
+            $attendances->whereBetween('tgl_waktu_absen', [$from, $to]);
         }
 
-        // filter nama siswa
+        /* ─── FILTER NAMA / KELAS (opsional) ─── */
         if ($request->filled('name')) {
-            $attendances->whereHas('siswa', function ($q) use ($request) {
-                $q->where('nama_siswa', 'like', '%' . $request->name . '%');
-            });
+            $attendances->whereHas('siswa', fn($q) =>
+            $q->where('nama_siswa', 'like', '%' . $request->name . '%'));
         }
 
-        // filter kelas (berdasar id_kelas)
         if ($request->filled('class')) {
-            $attendances->whereHas('siswa', function ($q) use ($request) {
-                $q->where('id_kelas', $request->class);
-            });
+            $attendances->whereHas('siswa', fn($q) =>
+            $q->where('id_kelas', $request->class));
         }
 
-        $attendances = $attendances->get();
+        $attendances = $attendances
+            ->orderBy('tgl_waktu_absen', 'desc')
+            ->get();
 
-        // daftar kelas untuk dropdown
-        $classes = Kelas::select('id', 'nama_kelas')->orderBy('nama_kelas')->get();
+        /* dropdown kelas (hanya kelas anak² wali ini saja) */
+        $classes = Kelas::whereIn(
+            'id',
+            $wali->siswa()->pluck('id_kelas')->unique()
+        )->orderBy('nama_kelas')->get();
 
-        return view('walimurid.history.index', compact('attendances', 'classes'));
+        return view('walimurid.history.index', [
+            'attendances' => $attendances,
+            'classes'     => $classes,
+            'from'        => $from,
+            'to'          => $to,
+        ]);
     }
 }

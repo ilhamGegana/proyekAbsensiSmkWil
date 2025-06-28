@@ -15,12 +15,12 @@ class StudentController extends Controller
     /* ===============================================================
      |  Ambil seluruh jadwal AKTIF milik guru
      |=============================================================== */
-    protected function schedules(int $guruId)
+    protected function schedules(int $guruId, string $hari)
     {
-        return JadwalPelajaran::aktif()                          // ← filter is_active = 1
+        return JadwalPelajaran::aktif()
             ->with('kelas:id,nama_kelas', 'mapel:id,nama_mapel')
             ->where('id_guru', $guruId)
-            ->orderBy('hari')
+            ->where('hari', $hari)          // ← filter nama hari
             ->orderBy('jam_ke')
             ->get();
     }
@@ -32,24 +32,35 @@ class StudentController extends Controller
     {
         $guru = Auth::user()->guru;
         $date = $request->input('date', Carbon::today()->toDateString());
+        $hari = Carbon::parse($date)->isoFormat('dddd');   // “Senin”, …, “Minggu”
 
-        /* jadwal aktif milik guru */
-        $schedules = $this->schedules($guru->id);
-        abort_if($schedules->isEmpty(), 403, 'Anda belum memiliki jadwal aktif.');
+        /* ─── jadwal aktif guru di hari tsb ─── */
+        $schedules = $this->schedules($guru->id, $hari);
 
-        /* jadwal terpilih (default = pertama) */
+        // ⇢ ①  kalau kosong --> kirim view kosong,
+        //     JANGAN abort 403
+        if ($schedules->isEmpty()) {
+            return view('guru.student.index', [
+                'students'           => collect(),
+                'schedules'          => collect(),   // dropdown jadwal akan hilang
+                'selectedScheduleId' => null,
+                'date'               => $date,
+                'hari'               => $hari,      // utk pesan di blade (optional)
+            ]);
+        }
+
+        /* ─── pilih jadwal ─── */
         $selectedScheduleId = $request->input('jadwal', $schedules->first()->id);
         $selectedSchedule   = $schedules->firstWhere('id', $selectedScheduleId);
-        abort_unless($selectedSchedule, 403, 'Jadwal tidak ditemukan atau non-aktif.');
+        abort_unless($selectedSchedule !== null, 403, 'Jadwal tidak ditemukan.');
 
-        /* siswa di kelas jadwal terpilih */
+        /* ─── siswa & absensi ─── */
         $query = Siswa::with([
             'kelas:id,nama_kelas',
-            'absensi' => fn($q) => $q
-                ->where('id_jadwal', $selectedScheduleId)
+            'absensi' => fn($q) =>
+            $q->where('id_jadwal', $selectedScheduleId)
                 ->whereDate('tgl_waktu_absen', $date)
-        ])
-            ->where('id_kelas', $selectedSchedule->id_kelas);
+        ])->where('id_kelas', $selectedSchedule->id_kelas);
 
         if ($request->filled('name')) {
             $query->where('nama_siswa', 'like', '%' . $request->name . '%');
@@ -60,6 +71,7 @@ class StudentController extends Controller
             'schedules'          => $schedules,
             'selectedScheduleId' => $selectedScheduleId,
             'date'               => $date,
+            'hari'               => $hari,
         ]);
     }
 

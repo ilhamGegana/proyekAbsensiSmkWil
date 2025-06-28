@@ -49,7 +49,8 @@ Route::prefix('admin')->group(function () {
     Route::resource('absensi', AbsensiController::class);
     Route::resource('jadwalPelajaran', JadwalPelajaranController::class);
     Route::get('/rekap', [RekapAdminController::class, 'index'])->name('rekap.index');
-    Route::get('/rekap/download', [RekapAdminController::class, 'download'])->name('rekap.download');
+    Route::get('/rekap/download-excel', [RekapAdminController::class, 'downloadExcel'])->name('rekap.download.excel');
+    Route::get('/rekap/download-pdf', [RekapAdminController::class, 'downloadPdf'])->name('rekap.download.pdf');
 });
 
 Route::get('/user/terkait/{role}', [UserController::class, 'getTerkait']);
@@ -88,16 +89,19 @@ Route::middleware(['auth', 'role:siswa'])
     ->name('siswa.')
     ->group(function () {
         Route::get('/home',  [HalamanSiswaController::class, 'index'])
-            ->name('siswa.dashboard');
+            ->name('dashboard');
 
         Route::get('/history', [HalamanSiswaController::class, 'history'])
-            ->name('siswa.history');
+            ->name('history');
         Route::post(
             '/generate-code',
             [HalamanSiswaController::class, 'generateCode']
         )
             ->middleware('throttle:5,1')
             ->name('generate-code');
+
+        Route::post('/signature',     [HalamanSiswaController::class, 'storeSignature'])
+            ->name('signature.store');
     });
 
 
@@ -107,9 +111,9 @@ Route::middleware(['auth', 'role:walimurid'])
     ->name('walimurid.')
     ->group(function () {
         Route::get('/home',  [HalamanWaliMuridController::class, 'index'])
-            ->name('walimurid.dashboard');
+            ->name('dashboard');
         Route::get('/history', [HalamanWalimuridController::class, 'history'])
-            ->name('walimurid.history');
+            ->name('history');
     });
 
 

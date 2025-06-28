@@ -29,17 +29,17 @@
                 @include('admin.partials.topbar')
                 {{-- Flash message global --}}
                 @if (session('success'))
-                    <div class="alert alert-success alert-dismissible fade show mx-3 mt-3" role="alert">
-                        {{ session('success') }}
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
+                <div class="alert alert-success alert-dismissible fade show mx-3 mt-3" role="alert">
+                    {{ session('success') }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
                 @endif
 
                 @if (session('error'))
-                    <div class="alert alert-danger alert-dismissible fade show mx-3 mt-3" role="alert">
-                        {{ session('error') }}
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
+                <div class="alert alert-danger alert-dismissible fade show mx-3 mt-3" role="alert">
+                    {{ session('error') }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
                 @endif
                 <div class="container-fluid">
                     @yield('content')
@@ -63,13 +63,24 @@
     <script src="{{ asset('sb-admin-2/vendor/datatables/jquery.dataTables.min.js') }}"></script>
     <script src="{{ asset('sb-admin-2/vendor/datatables/dataTables.bootstrap4.min.js') }}"></script>
     <script>
-        $(document).on('shown.bs.offcanvas shown.bs.modal', function() {
+        $(document).ready(function() {
+            // Untuk halaman biasa
             $('.select2').select2({
                 width: '100%',
                 placeholder: 'Pilih atau cari data',
                 allowClear: true,
                 minimumResultsForSearch: 0,
-                dropdownParent: $('.offcanvas.show')
+            });
+
+            // Untuk elemen di dalam offcanvas/modal
+            $(document).on('shown.bs.offcanvas shown.bs.modal', function() {
+                $('.select2').select2({
+                    width: '100%',
+                    placeholder: 'Pilih atau cari data',
+                    allowClear: true,
+                    minimumResultsForSearch: 0,
+                    dropdownParent: $('.offcanvas.show')
+                });
             });
         });
     </script>

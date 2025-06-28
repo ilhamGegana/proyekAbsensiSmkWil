@@ -19,19 +19,19 @@ class AttendanceController extends Controller
      |================================================================ */
     public function index(Request $request)
     {
-        $guru   = Auth::user()->guru;                 // guru yang login
-        $today  = Carbon::today();                    // tanggal hari ini
-        $hari   = $today->isoFormat('dddd');          // Senin, Selasa, ...
+        $guru   = Auth::user()->guru;          // guru yang login
+        $today  = Carbon::today();             // 2025-06-28, dst.
+        $hari   = $today->isoFormat('dddd');   // "Sabtu", "Senin", …
 
-        /* ---------- Jadwal aktif milik guru (hari apa pun) ---------- */
+        /* ─── jadwal aktif guru untuk hari ini ─── */
         $schedules = JadwalPelajaran::aktif()
             ->with('kelas:id,nama_kelas', 'mapel:id,nama_mapel')
             ->where('id_guru', $guru->id)
-            ->orderBy('hari')
+            ->where('hari',   $hari)
             ->orderBy('jam_ke')
             ->get();
 
-        // Jika guru belum memiliki jadwal sama sekali
+        // guru tidak mengajar hari ini
         if ($schedules->isEmpty()) {
             return view('guru.attendance.index', [
                 'students'           => collect(),
@@ -42,26 +42,24 @@ class AttendanceController extends Controller
             ]);
         }
 
-        /* ---------- Tentukan jadwal terpilih ---------- */
+        /* ─── jadwal terpilih (default = pertama) ─── */
         $selectedScheduleId = $request->input('jadwal', $schedules->first()->id);
         $selectedSchedule   = $schedules->firstWhere('id', $selectedScheduleId);
 
-        // Jika jadwal yang diminta tidak valid (mis. sudah non-aktif)
         if (! $selectedSchedule) {
-            return back()->with('warning', 'Jadwal tidak ditemukan atau non-aktif.');
+            return back()->with('warning', 'Jadwal tidak ditemukan.');
         }
 
-        /* ---------- Ambil siswa pada kelas jadwal ---------- */
+        /* ─── siswa & absensi ─── */
         $students = Siswa::with('kelas:id,nama_kelas')
             ->where('id_kelas', $selectedSchedule->id_kelas)
             ->orderBy('nama_siswa')
             ->get();
 
-        /* ---------- Ambil absensi hari ini pada jadwal ---------- */
         $absensiMap = Absensi::where('id_jadwal', $selectedScheduleId)
             ->whereDate('tgl_waktu_absen', $today)
             ->get()
-            ->keyBy('id_siswa');   // [id_siswa => Absensi]
+            ->keyBy('id_siswa');
 
         return view('guru.attendance.index', compact(
             'students',
