@@ -68,11 +68,33 @@
 
                         <td class="text-center">
                             <?php if($absen && $absen->signature_ref): ?>
-                            <a href="<?php echo e(asset('signatures/' . $absen->signature_ref)); ?>" target="_blank"
-                                class="btn btn-primary btn-sm">
-                                <i class="fas fa-signature"></i> Lihat
-                            </a>
+                            <div class="mb-2">
+                                <img src="<?php echo e($absen->signature_ref); ?>"
+                                    alt="Tanda Tangan"
+                                    class="img-fluid border"
+                                    style="max-width:200px; cursor: pointer;"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#sigModal">
+                            </div>
+
+                            <!-- Modal Bootstrap -->
+                            <div class="modal fade" id="sigModal" tabindex="-1" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title">Preview Tanda Tangan</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                        </div>
+                                        <div class="modal-body text-center">
+                                            <img src="<?php echo e($absen->signature_ref); ?>"
+                                                alt="Tanda Tangan Besar"
+                                                class="img-fluid">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                             <?php else: ?>
+
                             <a href="<?php echo e(route('guru.attendance.sign', [$student->id, 'jadwal' => $selectedScheduleId, 'date' => $today->toDateString()])); ?>"
                                 class="btn btn-success btn-sm">
                                 <i class="fas fa-pen"></i> Tanda Tangan

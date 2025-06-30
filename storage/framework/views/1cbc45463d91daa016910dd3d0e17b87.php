@@ -29,10 +29,10 @@
 <?php $__env->startSection('extra-links'); ?>
 <hr>
 <div class="text-center">
-    <a class="small text-green-custom" href="#">Forgot Password?</a>
+    <a class="small text-green-custom" href="#">Lupa Password?</a>
 </div>
 <div class="text-center">
-    <a class="small text-green-custom" href="<?php echo e(route('register')); ?>">Create an Account!</a>
+    <a class="small text-green-custom" href="<?php echo e(route('register')); ?>">Buat Akun!</a>
 </div>
 <?php $__env->stopSection(); ?>
 <?php echo $__env->make('layouts.authMaster', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH /var/www/proyekAbsensiSmkWil/resources/views/auth/login.blade.php ENDPATH**/ ?>

@@ -79,7 +79,7 @@ class AuthController extends Controller
         }
 
         Auth::login($user);
-        return redirect()->intended('/login');
+        return redirect()->intended('/login')->with('success','Registrasi berhasil, silakan login');;
     }
 
 
@@ -90,7 +90,7 @@ class AuthController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect('/login');
+        return redirect('/login')->with('success','Anda Keluar dari Akun');;
     }
     public function showRegisterForm()
     {

@@ -31,9 +31,9 @@
 @section('extra-links')
 <hr>
 <div class="text-center">
-    <a class="small text-green-custom" href="#">Forgot Password?</a>
+    <a class="small text-green-custom" href="#">Lupa Password?</a>
 </div>
 <div class="text-center">
-    <a class="small text-green-custom" href="{{ route('register') }}">Create an Account!</a>
+    <a class="small text-green-custom" href="{{ route('register') }}">Buat Akun!</a>
 </div>
 @endsection

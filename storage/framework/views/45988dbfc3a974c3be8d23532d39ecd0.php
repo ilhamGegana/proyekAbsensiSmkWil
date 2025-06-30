@@ -49,9 +49,15 @@
             <span>Daftar Siswa</span>
         </a>
     </li>
+    <li class="nav-item <?php echo e(request()->routeIs('guru.rekap.index') ? 'active' : ''); ?>">
+        <a class="nav-link" href="<?php echo e(route('guru.rekap.index')); ?>">
+            <i class="fas fa-file-alt"></i>
+            <span>Rekap Absensi</span>
+        </a>
+    </li>
+
 
     
 
     <hr class="sidebar-divider d-none d-md-block">
-</ul>
-<?php /**PATH /var/www/proyekAbsensiSmkWil/resources/views/guru/partials/sidebarguru.blade.php ENDPATH**/ ?>
+</ul><?php /**PATH /var/www/proyekAbsensiSmkWil/resources/views/guru/partials/sidebarguru.blade.php ENDPATH**/ ?>

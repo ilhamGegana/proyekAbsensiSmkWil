@@ -49,8 +49,12 @@
             <span>Daftar Siswa</span>
         </a>
     </li>
-
-    {{-- Tambah menu lain yang diperlukan guru di sini --}}
+    <li class="nav-item {{ request()->routeIs('guru.rekap.index') ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route('guru.rekap.index') }}">
+            <i class="fas fa-file-alt"></i>
+            <span>Rekap Absensi</span>
+        </a>
+    </li>
 
     <hr class="sidebar-divider d-none d-md-block">
 </ul>

@@ -18099,3 +18099,156 @@ Did you mean this?
 "} 
 [2025-06-29 03:28:31] local.DEBUG: HIST  
 [2025-06-29 03:29:25] local.DEBUG: HIST  
+[2025-06-29 12:35:11] local.DEBUG: HIST  
+[2025-06-30 00:16:44] local.DEBUG: HIST  
+[2025-06-30 11:49:08] local.DEBUG: Signature-Compare-Result {"exitCode":0,"stdout":"SSIM=0.7729  HuDist=0.92
+MATCH
+","stderr":""} 
+[2025-06-30 11:51:15] local.DEBUG: Signature-Compare {"ref":"/var/www/proyekAbsensiSmkWil/public/signature_data/example2.png","new":"/var/www/proyekAbsensiSmkWil/public/signatures/sig_4_1751259075.png","exists_ref":true,"exists_new":true} 
+[2025-06-30 11:51:20] local.DEBUG: Signature-Compare {"ref":"/var/www/proyekAbsensiSmkWil/public/signature_data/example2.png","new":"/var/www/proyekAbsensiSmkWil/public/signatures/sig_4_1751259080.png","exists_ref":true,"exists_new":true} 
+[2025-06-30 11:51:22] local.DEBUG: Signature-Compare-Result {"exitCode":0,"stdout":"SSIM=0.7801  HuDist=1.03
+MATCH
+","stderr":""}
+[2025-06-30 12:00:18] local.DEBUG: Signature-Compare {"ref":"/var/www/proyekAbsensiSmkWil/public/signature_data/example2.png","new":"/var/www/proyekAbsensiSmkWil/public/signatures/sig_4_1751259618.png","exists_ref":true,"exists_new":true} 
+[2025-06-30 12:00:23] local.DEBUG: Signature-Compare {"ref":"/var/www/proyekAbsensiSmkWil/public/signature_data/example2.png","new":"/var/www/proyekAbsensiSmkWil/public/signatures/sig_4_1751259623.png","exists_ref":true,"exists_new":true} 
+[2025-06-30 12:00:29] local.DEBUG: Signature-Compare {"ref":"/var/www/proyekAbsensiSmkWil/public/signature_data/example2.png","new":"/var/www/proyekAbsensiSmkWil/public/signatures/sig_4_1751259629.png","exists_ref":true,"exists_new":true} 
+[2025-06-30 12:25:08] local.DEBUG: Signature-Compare {"ref":"/var/www/proyekAbsensiSmkWil/public/signature_data/example2.png","new":"/var/www/proyekAbsensiSmkWil/public/signatures/sig_4_1751261108.png","exists_ref":true,"exists_new":true} 
+[2025-06-30 12:25:16] local.DEBUG: Signature-Compare {"ref":"/var/www/proyekAbsensiSmkWil/public/signature_data/example2.png","new":"/var/www/proyekAbsensiSmkWil/public/signatures/sig_4_1751261116.png","exists_ref":true,"exists_new":true} 
+[2025-06-30 12:25:18] local.DEBUG: Signature-Compare-Result {"exitCode":0,"stdout":"MATCH
+","stderr":""} 
+[2025-06-30 12:29:51] local.DEBUG: Signature-Compare {"ref":"/var/www/proyekAbsensiSmkWil/public/signature_data/example3.png","new":"/var/www/proyekAbsensiSmkWil/public/signatures/sig_5_1751261391.png","exists_ref":true,"exists_new":true} 
+[2025-06-30 12:29:56] local.DEBUG: Signature-Compare {"ref":"/var/www/proyekAbsensiSmkWil/public/signature_data/example3.png","new":"/var/www/proyekAbsensiSmkWil/public/signatures/sig_5_1751261396.png","exists_ref":true,"exists_new":true} 
+[2025-06-30 12:30:01] local.DEBUG: Signature-Compare {"ref":"/var/www/proyekAbsensiSmkWil/public/signature_data/example3.png","new":"/var/www/proyekAbsensiSmkWil/public/signatures/sig_5_1751261401.png","exists_ref":true,"exists_new":true} 
+[2025-06-30 12:30:06] local.DEBUG: Signature-Compare {"ref":"/var/www/proyekAbsensiSmkWil/public/signature_data/example3.png","new":"/var/www/proyekAbsensiSmkWil/public/signatures/sig_5_1751261406.png","exists_ref":true,"exists_new":true} 
+[2025-06-30 12:30:11] local.DEBUG: Signature-Compare {"ref":"/var/www/proyekAbsensiSmkWil/public/signature_data/example3.png","new":"/var/www/proyekAbsensiSmkWil/public/signatures/sig_5_1751261411.png","exists_ref":true,"exists_new":true} 
+[2025-06-30 12:30:18] local.DEBUG: Signature-Compare {"ref":"/var/www/proyekAbsensiSmkWil/public/signature_data/example3.png","new":"/var/www/proyekAbsensiSmkWil/public/signatures/sig_5_1751261418.png","exists_ref":true,"exists_new":true} 
+[2025-06-30 12:30:25] local.DEBUG: Signature-Compare {"ref":"/var/www/proyekAbsensiSmkWil/public/signature_data/example3.png","new":"/var/www/proyekAbsensiSmkWil/public/signatures/sig_5_1751261425.png","exists_ref":true,"exists_new":true} 
+[2025-06-30 12:30:29] local.DEBUG: Signature-Compare {"ref":"/var/www/proyekAbsensiSmkWil/public/signature_data/example3.png","new":"/var/www/proyekAbsensiSmkWil/public/signatures/sig_5_1751261429.png","exists_ref":true,"exists_new":true} 
+[2025-06-30 12:30:32] local.DEBUG: Signature-Compare {"ref":"/var/www/proyekAbsensiSmkWil/public/signature_data/example3.png","new":"/var/www/proyekAbsensiSmkWil/public/signatures/sig_5_1751261432.png","exists_ref":true,"exists_new":true} 
+[2025-06-30 12:30:38] local.DEBUG: Signature-Compare {"ref":"/var/www/proyekAbsensiSmkWil/public/signature_data/example3.png","new":"/var/www/proyekAbsensiSmkWil/public/signatures/sig_5_1751261438.png","exists_ref":true,"exists_new":true} 
+[2025-06-30 12:34:09] local.DEBUG: Signature-Compare {"ref":"/var/www/proyekAbsensiSmkWil/public/signature_data/example2.png","new":"/var/www/proyekAbsensiSmkWil/public/signatures/sig_4_1751261649.png","exists_ref":true,"exists_new":true} 
+[2025-06-30 12:34:14] local.DEBUG: Signature-Compare {"ref":"/var/www/proyekAbsensiSmkWil/public/signature_data/example2.png","new":"/var/www/proyekAbsensiSmkWil/public/signatures/sig_4_1751261654.png","exists_ref":true,"exists_new":true} 
+[2025-06-30 12:34:18] local.DEBUG: Signature-Compare {"ref":"/var/www/proyekAbsensiSmkWil/public/signature_data/example2.png","new":"/var/www/proyekAbsensiSmkWil/public/signatures/sig_4_1751261658.png","exists_ref":true,"exists_new":true} 
+[2025-06-30 12:34:22] local.DEBUG: Signature-Compare {"ref":"/var/www/proyekAbsensiSmkWil/public/signature_data/example2.png","new":"/var/www/proyekAbsensiSmkWil/public/signatures/sig_4_1751261662.png","exists_ref":true,"exists_new":true} 
+[2025-06-30 12:34:26] local.DEBUG: Signature-Compare {"ref":"/var/www/proyekAbsensiSmkWil/public/signature_data/example2.png","new":"/var/www/proyekAbsensiSmkWil/public/signatures/sig_4_1751261666.png","exists_ref":true,"exists_new":true} 
+[2025-06-30 12:34:34] local.DEBUG: Signature-Compare {"ref":"/var/www/proyekAbsensiSmkWil/public/signature_data/example2.png","new":"/var/www/proyekAbsensiSmkWil/public/signatures/sig_4_1751261674.png","exists_ref":true,"exists_new":true} 
+[2025-06-30 12:34:38] local.DEBUG: Signature-Compare {"ref":"/var/www/proyekAbsensiSmkWil/public/signature_data/example2.png","new":"/var/www/proyekAbsensiSmkWil/public/signatures/sig_4_1751261678.png","exists_ref":true,"exists_new":true} 
+[2025-06-30 12:34:43] local.DEBUG: Signature-Compare {"ref":"/var/www/proyekAbsensiSmkWil/public/signature_data/example2.png","new":"/var/www/proyekAbsensiSmkWil/public/signatures/sig_4_1751261683.png","exists_ref":true,"exists_new":true} 
+[2025-06-30 12:34:46] local.DEBUG: Signature-Compare {"ref":"/var/www/proyekAbsensiSmkWil/public/signature_data/example2.png","new":"/var/www/proyekAbsensiSmkWil/public/signatures/sig_4_1751261686.png","exists_ref":true,"exists_new":true} 
+[2025-06-30 12:34:49] local.DEBUG: Signature-Compare {"ref":"/var/www/proyekAbsensiSmkWil/public/signature_data/example2.png","new":"/var/www/proyekAbsensiSmkWil/public/signatures/sig_4_1751261689.png","exists_ref":true,"exists_new":true} 
+[2025-06-30 12:34:58] local.DEBUG: Signature-Compare {"ref":"/var/www/proyekAbsensiSmkWil/public/signature_data/example2.png","new":"/var/www/proyekAbsensiSmkWil/public/signatures/sig_4_1751261698.png","exists_ref":true,"exists_new":true} 
+[2025-06-30 12:35:07] local.DEBUG: Signature-Compare {"ref":"/var/www/proyekAbsensiSmkWil/public/signature_data/example2.png","new":"/var/www/proyekAbsensiSmkWil/public/signatures/sig_4_1751261707.png","exists_ref":true,"exists_new":true} 
+[2025-06-30 12:35:12] local.DEBUG: Signature-Compare {"ref":"/var/www/proyekAbsensiSmkWil/public/signature_data/example2.png","new":"/var/www/proyekAbsensiSmkWil/public/signatures/sig_4_1751261712.png","exists_ref":true,"exists_new":true} 
+[2025-06-30 12:35:17] local.DEBUG: Signature-Compare {"ref":"/var/www/proyekAbsensiSmkWil/public/signature_data/example2.png","new":"/var/www/proyekAbsensiSmkWil/public/signatures/sig_4_1751261717.png","exists_ref":true,"exists_new":true} 
+[2025-06-30 12:35:23] local.DEBUG: Signature-Compare {"ref":"/var/www/proyekAbsensiSmkWil/public/signature_data/example2.png","new":"/var/www/proyekAbsensiSmkWil/public/signatures/sig_4_1751261722.png","exists_ref":true,"exists_new":true} 
+[2025-06-30 12:36:23] local.DEBUG: Signature-Compare {"ref":"/var/www/proyekAbsensiSmkWil/public/signature_data/example2.png","new":"/var/www/proyekAbsensiSmkWil/public/signatures/sig_4_1751261783.png","exists_ref":true,"exists_new":true} 
+[2025-06-30 12:36:27] local.DEBUG: Signature-Compare {"ref":"/var/www/proyekAbsensiSmkWil/public/signature_data/example2.png","new":"/var/www/proyekAbsensiSmkWil/public/signatures/sig_4_1751261787.png","exists_ref":true,"exists_new":true} 
+[2025-06-30 12:36:28] local.DEBUG: Signature-Compare-Result {"exitCode":0,"stdout":"MATCH
+","stderr":""} 
+[2025-06-30 12:37:22] local.DEBUG: Signature-Compare {"ref":"/var/www/proyekAbsensiSmkWil/public/signature_data/example2.png","new":"/var/www/proyekAbsensiSmkWil/public/signatures/sig_4_1751261842.png","exists_ref":true,"exists_new":true} 
+[2025-06-30 12:37:23] local.DEBUG: Signature-Compare-Result {"exitCode":0,"stdout":"MATCH
+","stderr":""} 
+[2025-06-30 12:40:16] local.DEBUG: Signature-Compare {"ref":"/var/www/proyekAbsensiSmkWil/public/signature_data/example2.png","new":"/var/www/proyekAbsensiSmkWil/public/signatures/sig_4_1751262016.png","exists_ref":true,"exists_new":true} 
+[2025-06-30 12:40:17] local.DEBUG: Signature-Compare-Result {"exitCode":0,"stdout":"MATCH
+","stderr":""} 
+[2025-06-30 12:40:43] local.DEBUG: Signature-Compare {"ref":"/var/www/proyekAbsensiSmkWil/public/signature_data/example2.png","new":"/var/www/proyekAbsensiSmkWil/public/signatures/sig_4_1751262043.png","exists_ref":true,"exists_new":true} 
+[2025-06-30 12:40:47] local.DEBUG: Signature-Compare {"ref":"/var/www/proyekAbsensiSmkWil/public/signature_data/example2.png","new":"/var/www/proyekAbsensiSmkWil/public/signatures/sig_4_1751262047.png","exists_ref":true,"exists_new":true} 
+[2025-06-30 12:40:50] local.DEBUG: Signature-Compare {"ref":"/var/www/proyekAbsensiSmkWil/public/signature_data/example2.png","new":"/var/www/proyekAbsensiSmkWil/public/signatures/sig_4_1751262050.png","exists_ref":true,"exists_new":true} 
+[2025-06-30 12:40:52] local.DEBUG: Signature-Compare-Result {"exitCode":0,"stdout":"MATCH
+","stderr":""} 
+[2025-06-30 12:41:25] local.DEBUG: Signature-Compare {"ref":"/var/www/proyekAbsensiSmkWil/public/signature_data/example2.png","new":"/var/www/proyekAbsensiSmkWil/public/signatures/sig_4_1751262085.png","exists_ref":true,"exists_new":true} 
+[2025-06-30 12:41:28] local.DEBUG: Signature-Compare-Result {"exitCode":0,"stdout":"MATCH
+","stderr":""} 
+[2025-06-30 12:42:08] local.DEBUG: Signature-Compare {"ref":"/var/www/proyekAbsensiSmkWil/public/signature_data/example2.png","new":"/var/www/proyekAbsensiSmkWil/public/signatures/sig_4_1751262128.png","exists_ref":true,"exists_new":true} 
+[2025-06-30 12:42:11] local.DEBUG: Signature-Compare {"ref":"/var/www/proyekAbsensiSmkWil/public/signature_data/example2.png","new":"/var/www/proyekAbsensiSmkWil/public/signatures/sig_4_1751262131.png","exists_ref":true,"exists_new":true} 
+[2025-06-30 12:42:18] local.DEBUG: Signature-Compare {"ref":"/var/www/proyekAbsensiSmkWil/public/signature_data/example2.png","new":"/var/www/proyekAbsensiSmkWil/public/signatures/sig_4_1751262138.png","exists_ref":true,"exists_new":true} 
+[2025-06-30 12:42:34] local.DEBUG: Signature-Compare {"ref":"/var/www/proyekAbsensiSmkWil/public/signature_data/example2.png","new":"/var/www/proyekAbsensiSmkWil/public/signatures/sig_4_1751262154.png","exists_ref":true,"exists_new":true} 
+[2025-06-30 12:42:39] local.DEBUG: Signature-Compare {"ref":"/var/www/proyekAbsensiSmkWil/public/signature_data/example2.png","new":"/var/www/proyekAbsensiSmkWil/public/signatures/sig_4_1751262159.png","exists_ref":true,"exists_new":true} 
+[2025-06-30 12:42:41] local.DEBUG: Signature-Compare-Result {"exitCode":0,"stdout":"MATCH
+","stderr":""} 
+[2025-06-30 12:45:01] local.DEBUG: Signature-Compare {"ref":"/var/www/proyekAbsensiSmkWil/public/signature_data/example2.png","new":"/var/www/proyekAbsensiSmkWil/public/signatures/sig_4_1751262301.png","exists_ref":true,"exists_new":true} 
+[2025-06-30 12:45:01] local.ERROR: First element must contain a non-empty program name {"userId":2,"exception":"[object] (ValueError(code: 0): First element must contain a non-empty program name at /var/www/proyekAbsensiSmkWil/vendor/symfony/process/Process.php:360)
+[stacktrace]
+#0 /var/www/proyekAbsensiSmkWil/vendor/symfony/process/Process.php(360): proc_open()
+#1 /var/www/proyekAbsensiSmkWil/vendor/symfony/process/Process.php(249): Symfony\\Component\\Process\\Process->start()
+#2 /var/www/proyekAbsensiSmkWil/vendor/laravel/framework/src/Illuminate/Support/HigherOrderTapProxy.php(33): Symfony\\Component\\Process\\Process->run()
+#3 /var/www/proyekAbsensiSmkWil/vendor/laravel/framework/src/Illuminate/Process/PendingProcess.php(258): Illuminate\\Support\\HigherOrderTapProxy->__call()
+#4 /var/www/proyekAbsensiSmkWil/vendor/laravel/framework/src/Illuminate/Process/Factory.php(327): Illuminate\\Process\\PendingProcess->run()
+#5 /var/www/proyekAbsensiSmkWil/vendor/laravel/framework/src/Illuminate/Support/Facades/Facade.php(361): Illuminate\\Process\\Factory->__call()
+#6 /var/www/proyekAbsensiSmkWil/app/Http/Controllers/Guru/AttendanceController.php(142): Illuminate\\Support\\Facades\\Facade::__callStatic()
+#7 /var/www/proyekAbsensiSmkWil/vendor/laravel/framework/src/Illuminate/Routing/ControllerDispatcher.php(46): App\\Http\\Controllers\\Guru\\AttendanceController->signStore()
+#8 /var/www/proyekAbsensiSmkWil/vendor/laravel/framework/src/Illuminate/Routing/Route.php(265): Illuminate\\Routing\\ControllerDispatcher->dispatch()
+#9 /var/www/proyekAbsensiSmkWil/vendor/laravel/framework/src/Illuminate/Routing/Route.php(211): Illuminate\\Routing\\Route->runController()
+#10 /var/www/proyekAbsensiSmkWil/vendor/laravel/framework/src/Illuminate/Routing/Router.php(808): Illuminate\\Routing\\Route->run()
+#11 /var/www/proyekAbsensiSmkWil/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(169): Illuminate\\Routing\\Router->Illuminate\\Routing\\{closure}()
+#12 /var/www/proyekAbsensiSmkWil/app/Http/Middleware/RoleMiddleware.php(15): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}()
+#13 /var/www/proyekAbsensiSmkWil/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(208): App\\Http\\Middleware\\RoleMiddleware->handle()
+#14 /var/www/proyekAbsensiSmkWil/vendor/laravel/framework/src/Illuminate/Routing/Middleware/SubstituteBindings.php(50): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}()
+#15 /var/www/proyekAbsensiSmkWil/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(208): Illuminate\\Routing\\Middleware\\SubstituteBindings->handle()
+#16 /var/www/proyekAbsensiSmkWil/vendor/laravel/framework/src/Illuminate/Auth/Middleware/Authenticate.php(63): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}()
+#17 /var/www/proyekAbsensiSmkWil/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(208): Illuminate\\Auth\\Middleware\\Authenticate->handle()
+#18 /var/www/proyekAbsensiSmkWil/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/VerifyCsrfToken.php(87): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}()
+#19 /var/www/proyekAbsensiSmkWil/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(208): Illuminate\\Foundation\\Http\\Middleware\\VerifyCsrfToken->handle()
+#20 /var/www/proyekAbsensiSmkWil/vendor/laravel/framework/src/Illuminate/View/Middleware/ShareErrorsFromSession.php(48): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}()
+#21 /var/www/proyekAbsensiSmkWil/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(208): Illuminate\\View\\Middleware\\ShareErrorsFromSession->handle()
+#22 /var/www/proyekAbsensiSmkWil/vendor/laravel/framework/src/Illuminate/Session/Middleware/StartSession.php(120): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}()
+#23 /var/www/proyekAbsensiSmkWil/vendor/laravel/framework/src/Illuminate/Session/Middleware/StartSession.php(63): Illuminate\\Session\\Middleware\\StartSession->handleStatefulRequest()
+#24 /var/www/proyekAbsensiSmkWil/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(208): Illuminate\\Session\\Middleware\\StartSession->handle()
+#25 /var/www/proyekAbsensiSmkWil/vendor/laravel/framework/src/Illuminate/Cookie/Middleware/AddQueuedCookiesToResponse.php(36): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}()
+#26 /var/www/proyekAbsensiSmkWil/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(208): Illuminate\\Cookie\\Middleware\\AddQueuedCookiesToResponse->handle()
+#27 /var/www/proyekAbsensiSmkWil/vendor/laravel/framework/src/Illuminate/Cookie/Middleware/EncryptCookies.php(74): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}()
+#28 /var/www/proyekAbsensiSmkWil/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(208): Illuminate\\Cookie\\Middleware\\EncryptCookies->handle()
+#29 /var/www/proyekAbsensiSmkWil/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(126): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}()
+#30 /var/www/proyekAbsensiSmkWil/vendor/laravel/framework/src/Illuminate/Routing/Router.php(807): Illuminate\\Pipeline\\Pipeline->then()
+#31 /var/www/proyekAbsensiSmkWil/vendor/laravel/framework/src/Illuminate/Routing/Router.php(786): Illuminate\\Routing\\Router->runRouteWithinStack()
+#32 /var/www/proyekAbsensiSmkWil/vendor/laravel/framework/src/Illuminate/Routing/Router.php(750): Illuminate\\Routing\\Router->runRoute()
+#33 /var/www/proyekAbsensiSmkWil/vendor/laravel/framework/src/Illuminate/Routing/Router.php(739): Illuminate\\Routing\\Router->dispatchToRoute()
+#34 /var/www/proyekAbsensiSmkWil/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php(200): Illuminate\\Routing\\Router->dispatch()
+#35 /var/www/proyekAbsensiSmkWil/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(169): Illuminate\\Foundation\\Http\\Kernel->Illuminate\\Foundation\\Http\\{closure}()
+#36 /var/www/proyekAbsensiSmkWil/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/TransformsRequest.php(21): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}()
+#37 /var/www/proyekAbsensiSmkWil/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/ConvertEmptyStringsToNull.php(31): Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest->handle()
+#38 /var/www/proyekAbsensiSmkWil/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(208): Illuminate\\Foundation\\Http\\Middleware\\ConvertEmptyStringsToNull->handle()
+#39 /var/www/proyekAbsensiSmkWil/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/TransformsRequest.php(21): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}()
+#40 /var/www/proyekAbsensiSmkWil/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/TrimStrings.php(51): Illuminate\\Foundation\\Http\\Middleware\\TransformsRequest->handle()
+#41 /var/www/proyekAbsensiSmkWil/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(208): Illuminate\\Foundation\\Http\\Middleware\\TrimStrings->handle()
+#42 /var/www/proyekAbsensiSmkWil/vendor/laravel/framework/src/Illuminate/Http/Middleware/ValidatePostSize.php(27): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}()
+#43 /var/www/proyekAbsensiSmkWil/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(208): Illuminate\\Http\\Middleware\\ValidatePostSize->handle()
+#44 /var/www/proyekAbsensiSmkWil/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/PreventRequestsDuringMaintenance.php(109): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}()
+#45 /var/www/proyekAbsensiSmkWil/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(208): Illuminate\\Foundation\\Http\\Middleware\\PreventRequestsDuringMaintenance->handle()
+#46 /var/www/proyekAbsensiSmkWil/vendor/laravel/framework/src/Illuminate/Http/Middleware/HandleCors.php(48): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}()
+#47 /var/www/proyekAbsensiSmkWil/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(208): Illuminate\\Http\\Middleware\\HandleCors->handle()
+#48 /var/www/proyekAbsensiSmkWil/vendor/laravel/framework/src/Illuminate/Http/Middleware/TrustProxies.php(58): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}()
+#49 /var/www/proyekAbsensiSmkWil/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(208): Illuminate\\Http\\Middleware\\TrustProxies->handle()
+#50 /var/www/proyekAbsensiSmkWil/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/InvokeDeferredCallbacks.php(22): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}()
+#51 /var/www/proyekAbsensiSmkWil/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(208): Illuminate\\Foundation\\Http\\Middleware\\InvokeDeferredCallbacks->handle()
+#52 /var/www/proyekAbsensiSmkWil/vendor/laravel/framework/src/Illuminate/Http/Middleware/ValidatePathEncoding.php(26): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}()
+#53 /var/www/proyekAbsensiSmkWil/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(208): Illuminate\\Http\\Middleware\\ValidatePathEncoding->handle()
+#54 /var/www/proyekAbsensiSmkWil/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php(126): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}()
+#55 /var/www/proyekAbsensiSmkWil/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php(175): Illuminate\\Pipeline\\Pipeline->then()
+#56 /var/www/proyekAbsensiSmkWil/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php(144): Illuminate\\Foundation\\Http\\Kernel->sendRequestThroughRouter()
+#57 /var/www/proyekAbsensiSmkWil/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(1219): Illuminate\\Foundation\\Http\\Kernel->handle()
+#58 /var/www/proyekAbsensiSmkWil/public/index.php(20): Illuminate\\Foundation\\Application->handleRequest()
+#59 {main}
+"} 
+[2025-06-30 12:47:01] local.DEBUG: Signature-Compare {"ref":"/var/www/proyekAbsensiSmkWil/public/signature_data/example2.png","new":"/var/www/proyekAbsensiSmkWil/public/signatures/sig_4_1751262421.png","exists_ref":true,"exists_new":true} 
+[2025-06-30 12:47:10] local.DEBUG: Signature-Compare {"ref":"/var/www/proyekAbsensiSmkWil/public/signature_data/example2.png","new":"/var/www/proyekAbsensiSmkWil/public/signatures/sig_4_1751262430.png","exists_ref":true,"exists_new":true} 
+[2025-06-30 12:47:13] local.DEBUG: Signature-Compare {"ref":"/var/www/proyekAbsensiSmkWil/public/signature_data/example2.png","new":"/var/www/proyekAbsensiSmkWil/public/signatures/sig_4_1751262433.png","exists_ref":true,"exists_new":true} 
+[2025-06-30 12:47:15] local.DEBUG: Signature-Compare {"ref":"/var/www/proyekAbsensiSmkWil/public/signature_data/example2.png","new":"/var/www/proyekAbsensiSmkWil/public/signatures/sig_4_1751262435.png","exists_ref":true,"exists_new":true} 
+[2025-06-30 12:47:20] local.DEBUG: Signature-Compare {"ref":"/var/www/proyekAbsensiSmkWil/public/signature_data/example2.png","new":"/var/www/proyekAbsensiSmkWil/public/signatures/sig_4_1751262440.png","exists_ref":true,"exists_new":true} 
+[2025-06-30 12:47:22] local.DEBUG: Signature-Compare {"ref":"/var/www/proyekAbsensiSmkWil/public/signature_data/example2.png","new":"/var/www/proyekAbsensiSmkWil/public/signatures/sig_4_1751262442.png","exists_ref":true,"exists_new":true} 
+[2025-06-30 12:47:24] local.DEBUG: Signature-Compare {"ref":"/var/www/proyekAbsensiSmkWil/public/signature_data/example2.png","new":"/var/www/proyekAbsensiSmkWil/public/signatures/sig_4_1751262444.png","exists_ref":true,"exists_new":true} 
+[2025-06-30 12:47:27] local.DEBUG: Signature-Compare {"ref":"/var/www/proyekAbsensiSmkWil/public/signature_data/example2.png","new":"/var/www/proyekAbsensiSmkWil/public/signatures/sig_4_1751262447.png","exists_ref":true,"exists_new":true} 
+[2025-06-30 12:47:32] local.DEBUG: Signature-Compare {"ref":"/var/www/proyekAbsensiSmkWil/public/signature_data/example2.png","new":"/var/www/proyekAbsensiSmkWil/public/signatures/sig_4_1751262452.png","exists_ref":true,"exists_new":true} 
+[2025-06-30 12:47:35] local.DEBUG: Signature-Compare {"ref":"/var/www/proyekAbsensiSmkWil/public/signature_data/example2.png","new":"/var/www/proyekAbsensiSmkWil/public/signatures/sig_4_1751262455.png","exists_ref":true,"exists_new":true} 
+[2025-06-30 12:47:45] local.DEBUG: Signature-Compare {"ref":"/var/www/proyekAbsensiSmkWil/public/signature_data/example2.png","new":"/var/www/proyekAbsensiSmkWil/public/signatures/sig_4_1751262465.png","exists_ref":true,"exists_new":true} 
+[2025-06-30 12:47:49] local.DEBUG: Signature-Compare {"ref":"/var/www/proyekAbsensiSmkWil/public/signature_data/example2.png","new":"/var/www/proyekAbsensiSmkWil/public/signatures/sig_4_1751262469.png","exists_ref":true,"exists_new":true} 
+[2025-06-30 12:47:53] local.DEBUG: Signature-Compare {"ref":"/var/www/proyekAbsensiSmkWil/public/signature_data/example2.png","new":"/var/www/proyekAbsensiSmkWil/public/signatures/sig_4_1751262473.png","exists_ref":true,"exists_new":true} 
+[2025-06-30 12:47:57] local.DEBUG: Signature-Compare {"ref":"/var/www/proyekAbsensiSmkWil/public/signature_data/example2.png","new":"/var/www/proyekAbsensiSmkWil/public/signatures/sig_4_1751262477.png","exists_ref":true,"exists_new":true} 
+[2025-06-30 12:48:01] local.DEBUG: Signature-Compare {"ref":"/var/www/proyekAbsensiSmkWil/public/signature_data/example2.png","new":"/var/www/proyekAbsensiSmkWil/public/signatures/sig_4_1751262481.png","exists_ref":true,"exists_new":true} 
+[2025-06-30 12:48:05] local.DEBUG: Signature-Compare {"ref":"/var/www/proyekAbsensiSmkWil/public/signature_data/example2.png","new":"/var/www/proyekAbsensiSmkWil/public/signatures/sig_4_1751262485.png","exists_ref":true,"exists_new":true} 
+[2025-06-30 12:48:10] local.DEBUG: Signature-Compare {"ref":"/var/www/proyekAbsensiSmkWil/public/signature_data/example2.png","new":"/var/www/proyekAbsensiSmkWil/public/signatures/sig_4_1751262490.png","exists_ref":true,"exists_new":true} 
+[2025-06-30 12:48:14] local.DEBUG: Signature-Compare {"ref":"/var/www/proyekAbsensiSmkWil/public/signature_data/example2.png","new":"/var/www/proyekAbsensiSmkWil/public/signatures/sig_4_1751262494.png","exists_ref":true,"exists_new":true} 
+[2025-06-30 12:48:22] local.DEBUG: Signature-Compare {"ref":"/var/www/proyekAbsensiSmkWil/public/signature_data/example2.png","new":"/var/www/proyekAbsensiSmkWil/public/signatures/sig_4_1751262502.png","exists_ref":true,"exists_new":true} 
+[2025-06-30 12:48:23] local.DEBUG: Signature-Compare {"ref":"/var/www/proyekAbsensiSmkWil/public/signature_data/example2.png","new":"/var/www/proyekAbsensiSmkWil/public/signatures/sig_4_1751262503.png","exists_ref":true,"exists_new":true} 
+[2025-06-30 12:48:29] local.DEBUG: Signature-Compare {"ref":"/var/www/proyekAbsensiSmkWil/public/signature_data/example2.png","new":"/var/www/proyekAbsensiSmkWil/public/signatures/sig_4_1751262509.png","exists_ref":true,"exists_new":true} 
+[2025-06-30 12:48:34] local.DEBUG: Signature-Compare {"ref":"/var/www/proyekAbsensiSmkWil/public/signature_data/example2.png","new":"/var/www/proyekAbsensiSmkWil/public/signatures/sig_4_1751262514.png","exists_ref":true,"exists_new":true} 

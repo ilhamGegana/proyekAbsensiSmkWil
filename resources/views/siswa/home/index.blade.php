@@ -26,7 +26,7 @@
                     {{-- ==== Preview jika sudah ada ==== --}}
                     @if($siswa->signature_data)
                     <img id="sigPreview"
-                        src="{{ asset($siswa->signature_data) }}"
+                        src="{{ $siswa->signature_data }}"
                         class="border mt-3 d-none"
                         style="max-width:100%;height:auto;">
                     @endif

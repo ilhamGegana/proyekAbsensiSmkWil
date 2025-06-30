@@ -141,6 +141,10 @@ class ComposerStaticInit88970a0117c062eed55fa8728fc43833
             'Laravel\\Prompts\\' => 16,
             'Laravel\\Pail\\' => 13,
         ),
+        'J' => 
+        array (
+            'Jenssegers\\ImageHash\\' => 21,
+        ),
         'I' => 
         array (
             'Intervention\\Image\\Laravel\\' => 27,
@@ -474,6 +478,10 @@ class ComposerStaticInit88970a0117c062eed55fa8728fc43833
         'Laravel\\Pail\\' => 
         array (
             0 => __DIR__ . '/..' . '/laravel/pail/src',
+        ),
+        'Jenssegers\\ImageHash\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/jenssegers/imagehash/src',
         ),
         'Intervention\\Image\\Laravel\\' => 
         array (
@@ -4142,6 +4150,13 @@ class ComposerStaticInit88970a0117c062eed55fa8728fc43833
         'Intervention\\Image\\Typography\\FontFactory' => __DIR__ . '/..' . '/intervention/image/src/Typography/FontFactory.php',
         'Intervention\\Image\\Typography\\Line' => __DIR__ . '/..' . '/intervention/image/src/Typography/Line.php',
         'Intervention\\Image\\Typography\\TextBlock' => __DIR__ . '/..' . '/intervention/image/src/Typography/TextBlock.php',
+        'Jenssegers\\ImageHash\\Hash' => __DIR__ . '/..' . '/jenssegers/imagehash/src/Hash.php',
+        'Jenssegers\\ImageHash\\ImageHash' => __DIR__ . '/..' . '/jenssegers/imagehash/src/ImageHash.php',
+        'Jenssegers\\ImageHash\\Implementation' => __DIR__ . '/..' . '/jenssegers/imagehash/src/Implementation.php',
+        'Jenssegers\\ImageHash\\Implementations\\AverageHash' => __DIR__ . '/..' . '/jenssegers/imagehash/src/Implementations/AverageHash.php',
+        'Jenssegers\\ImageHash\\Implementations\\BlockHash' => __DIR__ . '/..' . '/jenssegers/imagehash/src/Implementations/BlockHash.php',
+        'Jenssegers\\ImageHash\\Implementations\\DifferenceHash' => __DIR__ . '/..' . '/jenssegers/imagehash/src/Implementations/DifferenceHash.php',
+        'Jenssegers\\ImageHash\\Implementations\\PerceptualHash' => __DIR__ . '/..' . '/jenssegers/imagehash/src/Implementations/PerceptualHash.php',
         'Laravel\\Pail\\Console\\Commands\\PailCommand' => __DIR__ . '/..' . '/laravel/pail/src/Console/Commands/PailCommand.php',
         'Laravel\\Pail\\Contracts\\Printer' => __DIR__ . '/..' . '/laravel/pail/src/Contracts/Printer.php',
         'Laravel\\Pail\\File' => __DIR__ . '/..' . '/laravel/pail/src/File.php',

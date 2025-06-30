@@ -18,6 +18,7 @@ use App\Http\Controllers\Siswa\HalamanSiswaController;
 use App\Http\Controllers\Walimurid\HalamanWaliMuridController;
 use Illuminate\Support\Facades\Process;
 use App\Http\Controllers\RekapAdminController;
+use App\Http\Controllers\Guru\RekapGuruController;
 
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [AuthController::class, 'login']);
@@ -81,6 +82,9 @@ Route::middleware(['auth', 'role:guru'])
 
         Route::put('/students/{siswa}', [StudentController::class, 'update'])
             ->name('students.update');
+        Route::get('/rekap', [RekapGuruController::class, 'index'])->name('rekap.index');
+        Route::get('/rekap/download-excel', [RekapGuruController::class, 'downloadExcel'])->name('rekap.download.excel');
+        Route::get('/rekap/download-pdf', [RekapGuruController::class, 'downloadPdf'])->name('rekap.download.pdf');
     });
 
 //=========================================SISWA=========================================

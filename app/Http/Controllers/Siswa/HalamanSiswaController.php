@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Http\JsonResponse;
 use Intervention\Image\Laravel\Facades\Image;
+use Intervention\Image\Encoders\PngEncoder;
 
 class HalamanSiswaController extends Controller
 {
@@ -84,33 +85,37 @@ class HalamanSiswaController extends Controller
     }
     public function storeSignature(Request $request): JsonResponse
     {
+        $request->validate([
+            'signature' => 'required|string',
+        ]);
+
+        $siswa = Auth::user()->siswa;
+
+        if ($siswa->signature_data) {
+            return response()->json([
+                'ok'      => false,
+                'message' => 'Tanda tangan sudah pernah disimpan dan tidak dapat diganti.',
+            ], 422);
+        }
+
         try {
-            $request->validate([
-                'signature' => 'required|string',
-            ]);
-
-            $siswa = Auth::user()->siswa;
-
-            $dataUri  = str_replace(' ', '+', $request->signature);
-            $img      = Image::read($dataUri)
+            $dataUri   = str_replace(' ', '+', $request->signature);
+            $img       = Image::read($dataUri)
                 ->trim()
                 ->resizeCanvas(600, 200, 'ffffff', 'center');
+            $pngBinary = (string) $img->toPng();
+            $base64    = 'data:image/png;base64,' . base64_encode($pngBinary);
 
-            $filename = 'sigref_' . $siswa->id . '_' . now()->timestamp . '.png';
-            $relative = "signature_data/{$filename}";
-
-            $img->save(public_path($relative));  // simpan ke public/
-
-            $siswa->update(['signature_data' => $relative]);
+            $siswa->update(['signature_data' => $base64]);
 
             return response()->json([
                 'ok'   => true,
-                'path' => asset($relative)
+                'data' => $base64,
             ]);
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             return response()->json([
-                'ok' => false,
-                'message' => 'Gagal menyimpan tanda tangan: ' . $e->getMessage()
+                'ok'      => false,
+                'message' => 'Gagal menyimpan: ' . $e->getMessage(),
             ], 500);
         }
     }

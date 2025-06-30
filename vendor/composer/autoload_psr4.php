@@ -74,6 +74,7 @@ return array(
     'Laravel\\Sail\\' => array($vendorDir . '/laravel/sail/src'),
     'Laravel\\Prompts\\' => array($vendorDir . '/laravel/prompts/src'),
     'Laravel\\Pail\\' => array($vendorDir . '/laravel/pail/src'),
+    'Jenssegers\\ImageHash\\' => array($vendorDir . '/jenssegers/imagehash/src'),
     'Intervention\\Image\\Laravel\\' => array($vendorDir . '/intervention/image-laravel/src'),
     'Intervention\\Image\\' => array($vendorDir . '/intervention/image/src'),
     'Intervention\\Gif\\' => array($vendorDir . '/intervention/gif/src'),

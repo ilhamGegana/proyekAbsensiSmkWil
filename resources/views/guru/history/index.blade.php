@@ -56,7 +56,6 @@
             <th>Nama Siswa</th>
             <th>Kelas</th>
             <th>Status</th>
-            <th>Tanda Tangan</th>
           </tr>
         </thead>
         <tbody>
@@ -80,16 +79,6 @@
               <span class="btn btn-sm btn-{{ $color }}">
                 {{ ucfirst($attendance->status_absen) }}
               </span>
-            </td>
-            <td class="text-center">
-              @if ($attendance->signature_ref)
-              <a href="{{ asset('storage/signatures/' . $attendance->signature_ref) }}"
-                target="_blank" class="btn btn-primary btn-sm">
-                <i class="fas fa-signature"></i> Lihat
-              </a>
-              @else
-              <span class="text-muted">—</span>
-              @endif
             </td>
           </tr>
           @endforeach

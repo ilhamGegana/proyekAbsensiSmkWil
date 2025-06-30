@@ -23,130 +23,144 @@
 
 @section('script')
 <script>
-    const canvas = document.getElementById('signature-pad');
-    const ctx = canvas.getContext('2d');
-    let drawing = false;
+    document.addEventListener('DOMContentLoaded', function() {
+        const canvas = document.getElementById('signature-pad');
+        const ctx = canvas.getContext('2d');
+        let drawing = false;
+        let lastX = 0;
+        let lastY = 0;
 
-    /* ────────── 1) Sesuaikan ukuran & garis ────────── */
-    function resize() {
-        const ratio = Math.max(window.devicePixelRatio || 1, 1);
+        // Fungsi resize canvas
+        function resize() {
+            const ratio = Math.max(window.devicePixelRatio || 1, 1);
+            const w = canvas.offsetWidth;
+            const h = canvas.offsetHeight;
 
-        // simpan ukuran visual (CSS) sebelum diubah
-        const w = canvas.offsetWidth;
-        const h = canvas.offsetHeight;
+            canvas.width = w * ratio;
+            canvas.height = h * ratio;
+            canvas.style.width = w + 'px';
+            canvas.style.height = h + 'px';
 
-        canvas.width = w * ratio; // resolusi internal → lebih tajam
-        canvas.height = h * ratio;
-        canvas.style.width = w + 'px'; // jaga ukuran visual
-        canvas.style.height = h + 'px';
+            ctx.resetTransform();
+            ctx.scale(ratio, ratio);
+            ctx.lineWidth = 2;
+            ctx.lineCap = 'round';
+            ctx.lineJoin = 'round';
+            ctx.strokeStyle = '#000';
 
-        ctx.resetTransform(); // pastikan transform bersih
-        ctx.scale(ratio, ratio); // skala seluruh kanvas
-        ctx.lineWidth = 2; // 2 CSS-pixel (≈ 2 × ratio actual)
+            fillWhite();
+        }
 
-        fillWhite();
-    }
-    window.addEventListener('resize', resize);
-    resize();
+        function fillWhite() {
+            ctx.fillStyle = '#fff';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+        }
 
-    /* ────────── 2) Selalu isi latar putih ────────── */
-    function fillWhite() {
-        ctx.fillStyle = '#fff';
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-    }
-
-    /* ────────── 3) Util posisi kursor/touch ────────── */
-    function getPos(e) {
-        const rect = canvas.getBoundingClientRect();
-        if (e.touches) {
+        function getPos(e) {
+            const rect = canvas.getBoundingClientRect();
             return {
-                x: e.touches[0].clientX - rect.left,
-                y: e.touches[0].clientY - rect.top
+                x: (e.clientX || e.touches[0].clientX) - rect.left,
+                y: (e.clientY || e.touches[0].clientY) - rect.top
             };
         }
-        return {
-            x: e.clientX - rect.left,
-            y: e.clientY - rect.top
-        };
-    }
 
-    /* ────────── 4) Event mouse ────────── */
-    canvas.addEventListener('mousedown', e => {
-        drawing = true;
-        const {
-            x,
-            y
-        } = getPos(e);
-        ctx.beginPath();
-        ctx.moveTo(x, y); // <─ posisi awal
-    });
-    canvas.addEventListener('mousemove', e => {
-        if (!drawing) return;
-        const {
-            x,
-            y
-        } = getPos(e);
-        ctx.lineTo(x, y);
-        ctx.stroke();
-    });
-    canvas.addEventListener('mouseup', () => drawing = false);
-    canvas.addEventListener('mouseleave', () => drawing = false);
+        // Event listeners untuk mouse/touch
+        function startDrawing(e) {
+            drawing = true;
+            const pos = getPos(e);
+            lastX = pos.x;
+            lastY = pos.y;
+            ctx.beginPath();
+            ctx.moveTo(lastX, lastY);
+        }
 
-    /* ────────── 5) Event touch ────────── */
-    canvas.addEventListener('touchstart', e => {
-        e.preventDefault();
-        drawing = true;
-        const {
-            x,
-            y
-        } = getPos(e);
-        ctx.beginPath();
-        ctx.moveTo(x, y);
-    });
-    canvas.addEventListener('touchmove', e => {
-        e.preventDefault();
-        if (!drawing) return;
-        const {
-            x,
-            y
-        } = getPos(e);
-        ctx.lineTo(x, y);
-        ctx.stroke();
-    });
-    canvas.addEventListener('touchend', () => drawing = false);
+        function draw(e) {
+            if (!drawing) return;
+            const pos = getPos(e);
 
-    /* ────────── 6) Tombol clear & save ────────── */
-    document.getElementById('clear').onclick = () => {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        fillWhite();
-    };
+            ctx.lineTo(pos.x, pos.y);
+            ctx.stroke();
 
-    document.getElementById('save').onclick = () => {
-        const dataURL = canvas.toDataURL('image/png');
-        document.getElementById('signature').value = dataURL;
-    };
+            // Simpan posisi terakhir
+            lastX = pos.x;
+            lastY = pos.y;
+        }
 
-    function isCanvasBlank(cv) {
-        const ctx = cv.getContext('2d');
-        const pixel = ctx.getImageData(0, 0, cv.width, cv.height).data;
-        // cek cepat: jika ada satu pixel tak-putih → sudah diisi
-        for (let i = 0; i < pixel.length; i += 4) {
-            if (pixel[i] !== 255 || pixel[i + 1] !== 255 || pixel[i + 2] !== 255) {
-                return false;
+        function stopDrawing() {
+            drawing = false;
+        }
+
+        // Hitung kompleksitas tanda tangan
+        function calculateComplexity() {
+            const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+            const pixels = imageData.data;
+            let signaturePixels = 0;
+
+            for (let i = 0; i < pixels.length; i += 4) {
+                if (pixels[i] !== 255 || pixels[i + 1] !== 255 || pixels[i + 2] !== 255) {
+                    signaturePixels++;
+                }
             }
-        }
-        return true;
-    }
 
-    document.getElementById('save').onclick = (e) => {
-        if (isCanvasBlank(canvas)) {
-            alert('Silakan gambar tanda tangan terlebih dahulu!');
-            return;
+            // Hitung perubahan arah untuk mengukur kompleksitas
+            return signaturePixels;
         }
-        const dataURL = canvas.toDataURL('image/png');
-        document.getElementById('signature').value = dataURL;
-        // baru submit form
-        document.getElementById('formSign').submit();
-    };
+
+        // Cek jika canvas kosong
+        function isCanvasBlank() {
+            const pixelBuffer = new Uint32Array(
+                ctx.getImageData(0, 0, canvas.width, canvas.height).data.buffer
+            );
+            return !pixelBuffer.some(color => color !== 0xFFFFFFFF);
+        }
+
+        // Event listeners
+        canvas.addEventListener('mousedown', startDrawing);
+        canvas.addEventListener('mousemove', draw);
+        canvas.addEventListener('mouseup', stopDrawing);
+        canvas.addEventListener('mouseout', stopDrawing);
+
+        canvas.addEventListener('touchstart', function(e) {
+            e.preventDefault();
+            startDrawing(e.touches[0]);
+        });
+
+        canvas.addEventListener('touchmove', function(e) {
+            e.preventDefault();
+            draw(e.touches[0]);
+        });
+
+        canvas.addEventListener('touchend', stopDrawing);
+
+        // Tombol clear
+        document.getElementById('clear').addEventListener('click', function() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            fillWhite();
+        });
+
+        // Tombol save
+        document.getElementById('save').addEventListener('click', function() {
+            const MIN_COMPLEXITY = 800; // Sesuaikan nilai ini
+
+            if (isCanvasBlank()) {
+                alert('Silakan gambar tanda tangan terlebih dahulu!');
+                return;
+            }
+
+            const complexity = calculateComplexity();
+            if (complexity < MIN_COMPLEXITY) {
+                alert('Tanda tangan terlalu sederhana. Harap gambar tanda tangan yang lebih detail.');
+                return;
+            }
+
+            const dataURL = canvas.toDataURL('image/png');
+            document.getElementById('signature').value = dataURL;
+            document.getElementById('formSign').submit();
+        });
+
+        // Inisialisasi
+        window.addEventListener('resize', resize);
+        resize();
+    });
 </script>
 @endsection

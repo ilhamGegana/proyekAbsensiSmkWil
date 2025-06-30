@@ -13,7 +13,9 @@
         "barryvdh/laravel-dompdf": "^3.1",
         "doctrine/dbal": "^4.2",
         "guzzlehttp/guzzle": "^7.9",
+        "intervention/image": "^3.11",
         "intervention/image-laravel": "^1.5",
+        "jenssegers/imagehash": "^0.10.0",
         "laravel/framework": "^12.0",
         "laravel/tinker": "^2.10.1",
         "maatwebsite/excel": "^3.1"
