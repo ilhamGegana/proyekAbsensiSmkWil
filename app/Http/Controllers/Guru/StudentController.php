@@ -106,16 +106,24 @@ class StudentController extends Controller
 
         $this->ensureInSchedule($siswa, $jadwalId);
 
-        $absensi = Absensi::firstOrCreate(
+        // ↘ only build an object, don't persist to DB
+        $absensi = Absensi::firstOrNew(
             [
                 'id_siswa'        => $siswa->id,
                 'id_jadwal'       => $jadwalId,
                 'tgl_waktu_absen' => $date,
-            ],
-            ['status_absen' => 'alpha']
+            ]
         );
 
-        return view('guru.student.edit', compact('siswa', 'absensi', 'date', 'jadwalId'));
+        // if it's a brand-new record, you can set a default for the form:
+        if (! $absensi->exists) {
+            $absensi->status_absen = null;   // leave the dropdown blank
+        }
+
+        return view(
+            'guru.student.edit',
+            compact('siswa', 'absensi', 'date', 'jadwalId')
+        );
     }
 
     /* ===============================================================
@@ -139,7 +147,7 @@ class StudentController extends Controller
                 'id_jadwal'       => $jadwalId,
                 'tgl_waktu_absen' => $date,
             ],
-            $data
+            $request->only('status_absen', 'keterangan')
         );
 
         /* kirim notifikasi bila alpha */

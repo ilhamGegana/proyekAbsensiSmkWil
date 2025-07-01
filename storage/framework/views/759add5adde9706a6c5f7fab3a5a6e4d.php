@@ -32,7 +32,10 @@
                 <div class="alert alert-success alert-dismissible fade show mx-3 mt-3" role="alert">
                     <?php echo e(session('success')); ?>
 
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+
                 </div>
                 <?php endif; ?>
 
@@ -40,7 +43,10 @@
                 <div class="alert alert-warning alert-dismissible fade show mx-3 mt-3" role="alert">
                     <?php echo e(session('warning')); ?>
 
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+
                 </div>
                 <?php endif; ?>
 
@@ -48,7 +54,10 @@
                 <div class="alert alert-danger alert-dismissible fade show mx-3 mt-3" role="alert">
                     <?php echo e(session('error')); ?>
 
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+
                 </div>
                 <?php endif; ?>
 
@@ -74,6 +83,7 @@
     <?php echo $__env->make('guru.partials.logout-modal', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
 
     <?php echo $__env->yieldContent('script'); ?>
+    <?php echo $__env->yieldPushContent('styles'); ?>
 </body>
 
 </html><?php /**PATH /var/www/proyekAbsensiSmkWil/resources/views/guru/template/template.blade.php ENDPATH**/ ?>

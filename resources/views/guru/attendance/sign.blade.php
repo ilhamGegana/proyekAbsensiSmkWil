@@ -4,21 +4,28 @@
 @section('content')
 <div class="card shadow mb-4">
     <div class="card-header font-weight-bold text-primary">
-        Tanda Tangan – {{ $siswa->nama_siswa }}
+        Tanda Tangan - {{ $siswa->nama_siswa }}
     </div>
     <div class="card-body">
-        <canvas id="signature-pad" class="border border-dark" width="600" height="200"></canvas>
+        {{-- Hint rotasi untuk mobile --}}
+        <p id="rotateHint" class="text-muted small d-sm-none mb-2">
+            ⚠️&nbsp;Rekomendasi: miringkan smartphone agar kanvas lebih besar.
+        </p>
 
+        {{-- Form dan Canvas --}}
         <form id="formSign"
             action="{{ route('guru.attendance.storeSign', [$siswa->id, 'jadwal' => $jadwalId, 'date' => $date]) }}"
             method="POST">
             @csrf
+            <canvas id="signature-pad" class="border border-dark w-100"></canvas>
+
             <input type="hidden" name="signature" id="signature">
-            <button type="button" id="clear" class="btn btn-secondary mt-3">Clear</button>
-            <button type="submit" id="save" class="btn btn-primary mt-3">Save</button>
+            <button type="button" id="clear" class="btn btn-secondary mt-2">Clear</button>
+            <button type="submit" id="save" class="btn btn-primary mt-2">Simpan</button>
         </form>
     </div>
 </div>
+
 @endsection
 
 @section('script')
@@ -164,3 +171,26 @@
     });
 </script>
 @endsection
+@push('styles')
+<style>
+    /* Default height untuk desktop */
+    #signature-pad {
+        width: 100%;
+        height: 200px;
+    }
+
+    /* Mobile view: tinggi diperbesar agar nyaman ditulis */
+    @media (max-width: 576px) {
+        #signature-pad {
+            height: 260px;
+        }
+    }
+
+    /* Hint rotasi hanya muncul di portrait */
+    @media (orientation: landscape) {
+        #rotateHint {
+            display: none;
+        }
+    }
+</style>
+@endpush

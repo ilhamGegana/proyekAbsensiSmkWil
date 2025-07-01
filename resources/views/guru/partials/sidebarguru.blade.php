@@ -31,10 +31,10 @@
         </a>
     </li>
 
-    <li class="nav-item {{ request()->routeIs('guru.history') ? 'active' : '' }}">
-        <a class="nav-link" href="{{ route('guru.history') }}">
-            <i class="fas fa-history"></i>
-            <span>Riwayat Absensi</span>
+    <li class="nav-item {{ request()->routeIs('guru.students.*') ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route('guru.students.index') }}">
+            <i class="fas fa-users"></i>
+            <span>Absensi Manual</span>
         </a>
     </li>
 
@@ -42,11 +42,10 @@
 
     <!-- DATA KELAS -->
     <div class="sidebar-heading">Kelas & Siswa</div>
-
-    <li class="nav-item {{ request()->routeIs('guru.students.*') ? 'active' : '' }}">
-        <a class="nav-link" href="{{ route('guru.students.index') }}">
-            <i class="fas fa-users"></i>
-            <span>Daftar Siswa</span>
+    <li class="nav-item {{ request()->routeIs('guru.history') ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route('guru.history') }}">
+            <i class="fas fa-history"></i>
+            <span>Riwayat Absensi</span>
         </a>
     </li>
     <li class="nav-item {{ request()->routeIs('guru.rekap.index') ? 'active' : '' }}">

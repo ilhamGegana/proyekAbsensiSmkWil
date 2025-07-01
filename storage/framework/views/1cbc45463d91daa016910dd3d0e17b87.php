@@ -29,9 +29,6 @@
 <?php $__env->startSection('extra-links'); ?>
 <hr>
 <div class="text-center">
-    <a class="small text-green-custom" href="#">Lupa Password?</a>
-</div>
-<div class="text-center">
     <a class="small text-green-custom" href="<?php echo e(route('register')); ?>">Buat Akun!</a>
 </div>
 <?php $__env->stopSection(); ?>

@@ -6,7 +6,7 @@
 @section('content')
 <div class="card shadow mb-4">
     <div class="card-header font-weight-bold text-green-custom">
-        Daftar Siswa – {{ \Carbon\Carbon::parse($date)->format('d/m/Y') }}
+        Daftar Siswa - {{ \Carbon\Carbon::parse($date)->format('d/m/Y') }}
     </div>
 
     <div class="card-body">
@@ -18,23 +18,16 @@
             Silakan pilih tanggal lain.
         </div>
 
-        {{-- tetap tampilkan input tanggal agar guru bisa ganti --}}
-        <form id="formFilter" action="{{ route('guru.students.index') }}" method="get">
-            <div class="row">
-                <div class="col-md-2 mb-2">
-                    <input type="date" name="date" id="date"
-                        class="form-control form-control-sm"
-                        value="{{ $date }}">
-                </div>
-            </div>
-        </form>
         @else
         {{-- ②  ─── FILTER NORMAL (jadwal tersedia) ───────────────── --}}
         <form action="{{ route('guru.students.index') }}" id="formFilter" method="get" class="mb-4">
             <div class="row">
                 {{-- ▼ JADWAL --}}
                 <div class="col-md-4 mb-2">
-                    <select name="jadwal" id="jadwal" class="form-control form-control-sm">
+                    <select name="jadwal"
+                        id="jadwal"
+                        class="form-control form-control-sm"
+                        onchange="this.form.submit()">
                         @foreach ($schedules as $sch)
                         <option value="{{ $sch->id }}"
                             {{ $sch->id == $selectedScheduleId ? 'selected' : '' }}>
@@ -44,13 +37,6 @@
                         </option>
                         @endforeach
                     </select>
-                </div>
-
-                {{-- ▼ TANGGAL --}}
-                <div class="col-md-2 mb-2">
-                    <input type="date" name="date" id="date"
-                        class="form-control form-control-sm"
-                        value="{{ $date }}">
                 </div>
 
                 {{-- ▼ CARI NAMA --}}

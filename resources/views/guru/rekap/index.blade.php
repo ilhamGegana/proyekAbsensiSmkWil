@@ -1,4 +1,4 @@
-@extends('admin.layouts.master')
+@extends('guru.template.template')
 
 @section('title', 'Rekap Absensi')
 
@@ -8,8 +8,22 @@
 <div class="card mb-4">
     <div class="card-header">Filter Data</div>
     <div class="card-body">
-        <form action="{{ route('rekap.index') }}" method="GET">
+        <form action="{{ route('guru.rekap.index') }}" method="GET">
             <div class="row">
+                {{-- Filter Minggu --}}
+                <div class="col-md-4 mb-2">
+                    <label for="week">Minggu ke-</label>
+                    <select name="week" id="week" class="form-control">
+                        <option value="">-- Pilih Minggu --</option>
+                        @for ($i = 1; $i <= 4; $i++)
+                            <option value="{{ $i }}" {{ request('week') == $i ? 'selected' : '' }}>
+                            Minggu ke-{{ $i }}
+                            </option>
+                            @endfor
+                    </select>
+                </div>
+
+                {{-- Tanggal --}}
                 <div class="col-md-4 mb-2">
                     <label for="tanggal_awal">Dari Tanggal</label>
                     <input type="date" name="tanggal_awal" id="tanggal_awal" class="form-control"
@@ -20,6 +34,8 @@
                     <input type="date" name="tanggal_akhir" id="tanggal_akhir" class="form-control"
                         value="{{ request('tanggal_akhir') }}">
                 </div>
+
+                {{-- Kelas --}}
                 <div class="col-md-4 mb-2">
                     <label for="kelas">Kelas</label>
                     <select name="kelas" id="kelas" class="form-control">
@@ -31,6 +47,8 @@
                         @endforeach
                     </select>
                 </div>
+
+                {{-- Nama Siswa --}}
                 <div class="col-md-4 mb-2">
                     <label for="siswa">Nama Siswa</label>
                     <select name="siswa" id="siswa" class="form-control select2">
@@ -45,14 +63,16 @@
                         @endforeach
                     </select>
                 </div>
+
+                {{-- Tombol Aksi --}}
                 <div class="col-md-12 d-flex justify-content-start mt-2">
                     <button class="btn btn-primary me-2" type="submit">
                         <i class="fas fa-filter"></i> Filter
                     </button>
-                    <a href="{{ route('rekap.download.excel', request()->all()) }}" class="btn btn-success">
+                    <a href="{{ route('guru.rekap.download.excel', request()->all()) }}" class="btn btn-success">
                         <i class="fas fa-file-excel"></i> Download Excel
                     </a>
-                    <a href="{{ route('rekap.download.pdf', request()->all()) }}" class="btn btn-danger ms-2">
+                    <a href="{{ route('guru.rekap.download.pdf', request()->all()) }}" class="btn btn-danger ms-2">
                         <i class="fas fa-file-pdf"></i> Download PDF
                     </a>
                 </div>
@@ -61,9 +81,10 @@
     </div>
 </div>
 
-@if (count($data) > 0)
-<div class="card">
-    <div class="card-header">Hasil Rekap</div>
+{{-- Tabel Rekap --}}
+@if ($rekapASI->count() > 0)
+<div class="card mt-4">
+    <div class="card-header">Rekap ASI (Alpha, Sakit, Izin)</div>
     <div class="card-body">
         <div class="table-responsive">
             <table class="table table-bordered">
@@ -71,19 +92,19 @@
                     <tr>
                         <th>Nama Siswa</th>
                         <th>Kelas</th>
-                        <th>Tanggal</th>
-                        <th>Jam Pelajaran</th>
-                        <th>Status</th>
+                        <th>Alpha</th>
+                        <th>Sakit</th>
+                        <th>Izin</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($data as $item)
+                    @foreach ($rekapASI as $siswa)
                     <tr>
-                        <td>{{ $item->siswa->nama_siswa ?? '-' }}</td>
-                        <td>{{ $item->siswa->kelas->nama_kelas ?? '-' }}</td>
-                        <td>{{ \Carbon\Carbon::parse($item->tgl_waktu_absen)->format('d/m/Y') }}</td>
-                        <td>{{ $item->jadwal->jam_ke ?? '-' }}</td>
-                        <td>{{ ucfirst($item->status_absen) }}</td>
+                        <td>{{ $siswa->nama_siswa }}</td>
+                        <td>{{ $siswa->kelas->nama_kelas ?? '-' }}</td>
+                        <td>{{ $siswa->alpha_count }}</td>
+                        <td>{{ $siswa->sakit_count }}</td>
+                        <td>{{ $siswa->izin_count }}</td>
                     </tr>
                     @endforeach
                 </tbody>

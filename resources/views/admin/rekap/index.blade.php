@@ -21,6 +21,17 @@
                         value="{{ request('tanggal_akhir') }}">
                 </div>
                 <div class="col-md-4 mb-2">
+                    <label for="minggu">Minggu</label>
+                    <select name="minggu" id="minggu" class="form-control">
+                        <option value="">-- Pilih Minggu --</option>
+                        @for ($i = 1; $i <= 4; $i++)
+                            <option value="{{ $i }}" {{ request('minggu') == $i ? 'selected' : '' }}>
+                            Minggu ke-{{ $i }}
+                            </option>
+                            @endfor
+                    </select>
+                </div>
+                <div class="col-md-4 mb-2">
                     <label for="kelas">Kelas</label>
                     <select name="kelas" id="kelas" class="form-control">
                         <option value="">-- Semua Kelas --</option>
@@ -61,9 +72,9 @@
     </div>
 </div>
 
-@if (count($data) > 0)
-<div class="card">
-    <div class="card-header">Hasil Rekap</div>
+@if ($rekapASI->count() > 0)
+<div class="card mt-4">
+    <div class="card-header">Rekap ASI (Alpha, Sakit, Izin)</div>
     <div class="card-body">
         <div class="table-responsive">
             <table class="table table-bordered">
@@ -71,19 +82,19 @@
                     <tr>
                         <th>Nama Siswa</th>
                         <th>Kelas</th>
-                        <th>Tanggal</th>
-                        <th>Jam Pelajaran</th>
-                        <th>Status</th>
+                        <th>Alpha</th>
+                        <th>Sakit</th>
+                        <th>Izin</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($data as $item)
+                    @foreach ($rekapASI as $siswa)
                     <tr>
-                        <td>{{ $item->siswa->nama_siswa ?? '-' }}</td>
-                        <td>{{ $item->siswa->kelas->nama_kelas ?? '-' }}</td>
-                        <td>{{ \Carbon\Carbon::parse($item->tgl_waktu_absen)->format('d/m/Y') }}</td>
-                        <td>{{ $item->jadwal->jam_ke ?? '-' }}</td>
-                        <td>{{ ucfirst($item->status_absen) }}</td>
+                        <td>{{ $siswa->nama_siswa }}</td>
+                        <td>{{ $siswa->kelas->nama_kelas ?? '-' }}</td>
+                        <td>{{ $siswa->alpha_count }}</td>
+                        <td>{{ $siswa->sakit_count }}</td>
+                        <td>{{ $siswa->izin_count }}</td>
                     </tr>
                     @endforeach
                 </tbody>

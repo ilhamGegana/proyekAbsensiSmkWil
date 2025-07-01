@@ -24,17 +24,17 @@ class RekapAbsensiExport implements FromCollection, WithHeadings, WithMapping
 
     public function headings(): array
     {
-        return ['Nama Siswa', 'Kelas', 'Tanggal', 'Jam Pelajaran', 'Status'];
+        return ['Nama Siswa', 'Kelas', 'Alpha', 'Sakit', 'Izin'];
     }
 
-    public function map($absensi): array
+    public function map($siswa): array
     {
         return [
-            $absensi->siswa->nama_siswa ?? '-',
-            $absensi->siswa->kelas->nama_kelas ?? '-',
-            \Carbon\Carbon::parse($absensi->tgl_waktu_absen)->format('d/m/Y'),
-            $absensi->jadwal->jam_ke ?? '-',
-            ucfirst($absensi->status_absen),
+            $siswa->nama_siswa,
+            $siswa->kelas->nama_kelas ?? '-',
+            $siswa->alpha_count ?? 0,
+            $siswa->sakit_count ?? 0,
+            $siswa->izin_count ?? 0,
         ];
     }
 }
