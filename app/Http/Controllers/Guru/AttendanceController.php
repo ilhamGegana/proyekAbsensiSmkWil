@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
 use Jenssegers\ImageHash\ImageHash;
 use Jenssegers\ImageHash\Implementations\PerceptualHash;
+use App\Models\SignatureSetting;
 
 class AttendanceController extends Controller
 {
@@ -17,11 +18,12 @@ class AttendanceController extends Controller
      |  HALAMAN DAFTAR ABSENSI (pilih jadwal, lihat siswa & status)
      |================================================================ */
     protected ImageHash $hasher;
-    protected int $threshold = 75;
+    protected int $threshold;
     public function __construct()
     {
         // Inisialisasi pHash
         $this->hasher = new ImageHash(new PerceptualHash());
+        $this->threshold = SignatureSetting::first()->threshold ?? 75;
     }
     public function index(Request $request)
     {

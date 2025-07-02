@@ -83,12 +83,19 @@
         </a>
     </li>
     <li class="nav-item <?php echo e(request()->routeIs('rekap.*') ? 'active' : ''); ?>">
-    <a class="nav-link" href="<?php echo e(route('rekap.index')); ?>">
-        <i class="fas fa-file-pdf"></i>
-        <span>Rekap Absensi</span>
-    </a>
-</li>
+        <a class="nav-link" href="<?php echo e(route('rekap.index')); ?>">
+            <i class="fas fa-file-pdf"></i>
+            <span>Rekap Absensi</span>
+        </a>
+    </li>
+    <div class="sidebar-heading">Pengaturan</div>
+
+    <li class="nav-item <?php echo e(request()->routeIs('admin.signature.*') ? 'active' : ''); ?>">
+        <a class="nav-link" href="<?php echo e(route('admin.signature.edit')); ?>">
+            <i class="fas fa-signature"></i>
+            <span>Pengaturan Tanda Tangan</span>
+        </a>
+    </li>
 
     <hr class="sidebar-divider d-none d-md-block">
-</ul>
-<?php /**PATH /var/www/proyekAbsensiSmkWil/resources/views/admin/partials/sidebar.blade.php ENDPATH**/ ?>
+</ul><?php /**PATH /var/www/proyekAbsensiSmkWil/resources/views/admin/partials/sidebar.blade.php ENDPATH**/ ?>

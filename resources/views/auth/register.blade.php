@@ -63,7 +63,7 @@ $(function () {
 
     const placeholders = {
         siswa: 'Masukkan NIS (Nomor Induk Siswa)',
-        guru:  'Masukkan NIP (Nomor Induk Pegawai)',
+        guru:  'Masukkan NIP atau NUPTK',
         walimurid: 'Masukkan Nomor Telepon Wali / Kode Undangan',
     };
 

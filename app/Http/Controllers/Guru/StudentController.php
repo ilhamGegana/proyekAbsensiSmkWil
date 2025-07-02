@@ -153,18 +153,37 @@ class StudentController extends Controller
         /* kirim notifikasi bila alpha */
         if ($data['status_absen'] === 'alpha') {
 
-            $walikelas = $siswa->kelas?->guru;
+            $kelas = $siswa->kelas;
+            $walikelas = $kelas?->guru;
+            $walimurid = $siswa->walimurid;
 
+            // Notifikasi ke guru/wali kelas
             if ($walikelas && $walikelas->telpon_guru) {
-                $notif = Notifikasi::create([
+                $pesanGuru = "Siswa anda dari kelas {$kelas->nama_kelas} atas nama {$siswa->nama_siswa} Alpha/Tidak Masuk";
+
+                $notifGuru = Notifikasi::create([
                     'id_guru'      => $walikelas->id,
                     'id_siswa'     => $siswa->id,
-                    'pesan'        => "Anak Anda {$siswa->nama_siswa} Alpha/Tidak Masuk",
+                    'pesan'        => $pesanGuru,
                     'tujuan'       => $walikelas->telpon_guru,
                     'status_kirim' => 'pending',
                 ]);
 
-                dispatch(new SendNotifikasiAlpha($notif));
+                dispatch(new SendNotifikasiAlpha($notifGuru));
+            }
+
+            // Notifikasi ke walimurid
+            if ($walimurid && $walimurid->telpon_walimurid) {
+                $pesanWali = "Anak Anda {$siswa->nama_siswa} Alpha/Tidak Masuk";
+
+                $notifWali = Notifikasi::create([
+                    'id_siswa'     => $siswa->id,
+                    'pesan'        => $pesanWali,
+                    'tujuan'       => $walimurid->telpon_walimurid,
+                    'status_kirim' => 'pending',
+                ]);
+
+                dispatch(new SendNotifikasiAlpha($notifWali));
             }
         }
 

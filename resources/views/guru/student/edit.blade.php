@@ -63,7 +63,7 @@
         <label>Status Absen ({{ \Carbon\Carbon::parse($date)->format('d/m/Y') }})</label>
         <select name="status_absen" class="form-control" required>
           <option value="">-- Pilih Status --</option>
-          @foreach (['hadir'=>'Hadir','sakit'=>'Sakit','izin'=>'Izin','alpha'=>'Alpha'] as $val=>$lbl)
+          @foreach (['sakit'=>'Sakit','izin'=>'Izin','alpha'=>'Alpha'] as $val=>$lbl)
           <option value="{{ $val }}"
             {{ old('status_absen', $absensi->status_absen) === $val ? 'selected' : '' }}>
             {{ $lbl }}

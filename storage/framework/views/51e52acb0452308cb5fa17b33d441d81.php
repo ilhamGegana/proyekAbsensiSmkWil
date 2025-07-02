@@ -94,7 +94,7 @@
             <form action="<?php echo e(route('guru.store')); ?>" method="POST">
                 <?php echo csrf_field(); ?>
                 <div class="mb-3">
-                    <label for="nip" class="form-label">NIP</label>
+                    <label for="nip" class="form-label">NIP/NUPTK</label>
                     <input type="text" name="nip" id="nip" class="form-control" value="<?php echo e(old('nip')); ?>">
                 </div>
                 <div class="mb-3">

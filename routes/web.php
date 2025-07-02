@@ -13,6 +13,7 @@ use App\Http\Controllers\SiswaController;
 use App\Http\Controllers\WalimuridController;
 use App\Http\Controllers\JadwalPelajaranController;
 use App\Http\Controllers\RekapAdminController;
+use App\Http\Controllers\SignatureSettingController;
 
 use App\Http\Controllers\Guru\HomeController;
 use App\Http\Controllers\Guru\HistoryController;
@@ -39,16 +40,28 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 Route::prefix('admin')->middleware('auth')->group(function () {
     Route::view('/dashboard', 'admin.dashboard')->name('admin.dashboard');
 
+    // Manual route untuk Kelas
+    Route::get('kelas', [KelasController::class, 'index'])->name('kelas.index');
+    Route::get('kelas/create', [KelasController::class, 'create'])->name('kelas.create');
+    Route::post('kelas', [KelasController::class, 'store'])->name('kelas.store');
+    Route::get('kelas/{kelas}', [KelasController::class, 'show'])->name('kelas.show');
+    Route::get('kelas/{kelas}/edit', [KelasController::class, 'edit'])->name('kelas.edit');
+    Route::put('kelas/{kelas}', [KelasController::class, 'update'])->name('kelas.update');
+    Route::delete('kelas/{kelas}', [KelasController::class, 'destroy'])->name('kelas.destroy');
+
+    // Resource lainnya tetap
     Route::resources([
         'walimurid' => WalimuridController::class,
         'siswa'     => SiswaController::class,
         'guru'      => GuruController::class,
-        'kelas'     => KelasController::class,
         'mapel'     => MapelController::class,
         'user'      => UserController::class,
         'absensi'   => AbsensiController::class,
         'jadwalPelajaran' => JadwalPelajaranController::class,
     ]);
+
+    Route::get('/signature-setting', [SignatureSettingController::class, 'edit'])->name('admin.signature.edit');
+    Route::post('/signature-setting', [SignatureSettingController::class, 'update'])->name('admin.signature.update');
 
     Route::patch('/jadwal/{jadwalPelajaran}/toggle', [JadwalPelajaranController::class, 'toggle'])
         ->name('jadwalPelajaran.toggle');
@@ -59,6 +72,7 @@ Route::prefix('admin')->middleware('auth')->group(function () {
         Route::get('/download-pdf', [RekapAdminController::class, 'downloadPdf'])->name('download.pdf');
     });
 });
+
 
 // User terkait data
 Route::get('/user/terkait/{role}', [UserController::class, 'getTerkait']);

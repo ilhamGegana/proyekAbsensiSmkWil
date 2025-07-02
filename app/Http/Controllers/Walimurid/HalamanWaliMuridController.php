@@ -7,6 +7,7 @@ use App\Models\Absensi;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Carbon\CarbonInterface;
 
 class HalamanWaliMuridController extends Controller
 {
@@ -17,51 +18,43 @@ class HalamanWaliMuridController extends Controller
 
     public function history(Request $request)
     {
-        $wali = Auth::user()->walimurid;            // wali yg login
-        $childIds = $wali->siswa()->pluck('id');        // id semua anak
+        $wali = Auth::user()->walimurid;
+        $childs = $wali->siswa()->with('kelas')->get();
 
-        /* ─── query dasar: hanya anak wali ini ─── */
-        $attendances = Absensi::with('siswa.kelas')
-            ->whereIn('id_siswa', $childIds);
+        $from  = $request->input('from');
+        $to    = $request->input('to');
+        $week  = $request->input('week');
 
-        /* ─── FILTER TANGGAL: sama persis dg guru/siswa ─── */
-        $from = $request->input('from');   // yyyy-mm-dd
-        $to   = $request->input('to');
+        // Jika minggu ke-N dipilih, override tanggal from dan to
+        if ($week) {
+            $now = now();
+            $startOfMonth = $now->copy()->startOfMonth();
+            $startDate = $startOfMonth->copy()->addWeeks($week - 1)->startOfWeek(CarbonInterface::MONDAY);
+            $endDate   = $startDate->copy()->endOfWeek(CarbonInterface::SUNDAY);
 
-        if ($from && !$to) {
-            $attendances->whereDate('tgl_waktu_absen', $from);
-        } elseif ($to && !$from) {
-            $attendances->whereDate('tgl_waktu_absen', $to);
-        } elseif ($from && $to) {
-            $attendances->whereBetween('tgl_waktu_absen', [$from, $to]);
+            $from = $startDate->format('Y-m-d');
+            $to   = $endDate->format('Y-m-d');
         }
 
-        /* ─── FILTER NAMA / KELAS (opsional) ─── */
-        if ($request->filled('name')) {
-            $attendances->whereHas('siswa', fn($q) =>
-            $q->where('nama_siswa', 'like', '%' . $request->name . '%'));
-        }
+        $rekap = $childs->map(function ($siswa) use ($from, $to) {
+            $absensiQuery = $siswa->absensi();
 
-        if ($request->filled('class')) {
-            $attendances->whereHas('siswa', fn($q) =>
-            $q->where('id_kelas', $request->class));
-        }
+            if ($from) $absensiQuery->whereDate('tgl_waktu_absen', '>=', $from);
+            if ($to)   $absensiQuery->whereDate('tgl_waktu_absen', '<=', $to);
 
-        $attendances = $attendances
-            ->orderBy('tgl_waktu_absen', 'desc')
-            ->get();
-
-        /* dropdown kelas (hanya kelas anak² wali ini saja) */
-        $classes = Kelas::whereIn(
-            'id',
-            $wali->siswa()->pluck('id_kelas')->unique()
-        )->orderBy('nama_kelas')->get();
+            return [
+                'siswa'       => $siswa,
+                'totalAlpha'  => (clone $absensiQuery)->where('status_absen', 'alpha')->count(),
+                'totalSakit'  => (clone $absensiQuery)->where('status_absen', 'sakit')->count(),
+                'totalIzin'   => (clone $absensiQuery)->where('status_absen', 'izin')->count(),
+            ];
+        });
 
         return view('walimurid.history.index', [
-            'attendances' => $attendances,
-            'classes'     => $classes,
-            'from'        => $from,
-            'to'          => $to,
+            'rekap' => $rekap,
+            'from'  => $from,
+            'to'    => $to,
+            'week'  => $week,
         ]);
     }
 }

@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Http\JsonResponse;
 use Intervention\Image\Laravel\Facades\Image;
 use Intervention\Image\Encoders\PngEncoder;
+use Carbon\CarbonInterface;
 
 class HalamanSiswaController extends Controller
 {
@@ -23,35 +24,50 @@ class HalamanSiswaController extends Controller
 
     public function history(Request $request)
     {
-        Log::debug('HIST', $request->all());
-        $siswa = Auth::user()->siswa;        // siswa yang login
+        $siswa = Auth::user()->siswa;
 
-        /* ─── query dasar: hanya id_siswa ini ─── */
-        $attendances = Absensi::with('siswa.kelas')
-            ->where('id_siswa', $siswa->id);
+        $from       = $request->input('from');
+        $to         = $request->input('to');
+        $weekFilter = $request->input('week');
 
-        /* ─── filter range tanggal ─── */
-        $from = $request->input('from');   // yyyy-mm-dd
-        $to   = $request->input('to');
+        // Jika filter "minggu ke-N" dipilih, hitung tanggal dari–sampai secara otomatis
+        if ($weekFilter) {
+            $now = now();
+            $startOfMonth = $now->copy()->startOfMonth();
+            $startDate = $startOfMonth->copy()->addWeeks($weekFilter - 1)->startOfWeek(CarbonInterface::MONDAY);
+            $endDate = $startDate->copy()->endOfWeek(CarbonInterface::SUNDAY);
 
-        if ($from && !$to) {
-            // hanya ‘dari’ → persis tanggal itu
-            $attendances->whereDate('tgl_waktu_absen', $from);
-        } elseif ($to && !$from) {
-            // hanya ‘sampai’ → persis tanggal itu
-            $attendances->whereDate('tgl_waktu_absen', $to);
-        } elseif ($from && $to) {
-            // keduanya → antara
-            $attendances->whereBetween('tgl_waktu_absen', [$from, $to]);
+            $from = $startDate->format('Y-m-d');
+            $to   = $endDate->format('Y-m-d');
         }
 
-        $attendances = $attendances->orderBy('tgl_waktu_absen', 'desc')->get();
+        // Hitung total berdasarkan status absen dan tanggal (jika ada)
+        $totalAlpha = $siswa->absensi()
+            ->where('status_absen', 'alpha')
+            ->when($from, fn($q) => $q->whereDate('tgl_waktu_absen', '>=', $from))
+            ->when($to, fn($q) => $q->whereDate('tgl_waktu_absen', '<=', $to))
+            ->count();
 
-        /* kelas dropdown tidak perlu — hapus saja */
+        $totalSakit = $siswa->absensi()
+            ->where('status_absen', 'sakit')
+            ->when($from, fn($q) => $q->whereDate('tgl_waktu_absen', '>=', $from))
+            ->when($to, fn($q) => $q->whereDate('tgl_waktu_absen', '<=', $to))
+            ->count();
+
+        $totalIzin = $siswa->absensi()
+            ->where('status_absen', 'izin')
+            ->when($from, fn($q) => $q->whereDate('tgl_waktu_absen', '>=', $from))
+            ->when($to, fn($q) => $q->whereDate('tgl_waktu_absen', '<=', $to))
+            ->count();
+
         return view('siswa.history.index', [
-            'attendances' => $attendances,
+            'siswa'       => $siswa,
+            'totalAlpha'  => $totalAlpha,
+            'totalSakit'  => $totalSakit,
+            'totalIzin'   => $totalIzin,
             'from'        => $from,
             'to'          => $to,
+            'week'        => $weekFilter,
         ]);
     }
 

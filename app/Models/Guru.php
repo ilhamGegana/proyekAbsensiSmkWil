@@ -27,5 +27,8 @@ class Guru extends Model
     {
         return $this->hasOne(User::class, 'id_guru');
     }
+    public function jadwal()
+    {
+        return $this->hasMany(JadwalPelajaran::class, 'id_guru');
+    }
 }
-

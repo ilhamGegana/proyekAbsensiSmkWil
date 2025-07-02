@@ -83,11 +83,19 @@
         </a>
     </li>
     <li class="nav-item {{ request()->routeIs('rekap.*') ? 'active' : '' }}">
-    <a class="nav-link" href="{{ route('rekap.index') }}">
-        <i class="fas fa-file-pdf"></i>
-        <span>Rekap Absensi</span>
-    </a>
-</li>
+        <a class="nav-link" href="{{ route('rekap.index') }}">
+            <i class="fas fa-file-pdf"></i>
+            <span>Rekap Absensi</span>
+        </a>
+    </li>
+    <div class="sidebar-heading">Pengaturan</div>
+
+    <li class="nav-item {{ request()->routeIs('admin.signature.*') ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route('admin.signature.edit') }}">
+            <i class="fas fa-signature"></i>
+            <span>Pengaturan Tanda Tangan</span>
+        </a>
+    </li>
 
     <hr class="sidebar-divider d-none d-md-block">
 </ul>
