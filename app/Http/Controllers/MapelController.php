@@ -95,6 +95,12 @@ class MapelController extends Controller
      */
     public function destroy(Mapel $mapel)
     {
+        if ($mapel->jadwal()->exists()) {
+            return back()->with(
+                'error',
+                'Tidak bisa dihapus: mapel masih dipakai di jadwal pelajaran.'
+            );
+        }
         $mapel->delete();
         return redirect()->route('mapel.index')->with('success', 'Mata pelajaran berhasil dihapus.');
     }

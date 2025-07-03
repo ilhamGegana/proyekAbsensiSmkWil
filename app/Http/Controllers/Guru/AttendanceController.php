@@ -11,12 +11,15 @@ use Illuminate\Validation\Rule;
 use Jenssegers\ImageHash\ImageHash;
 use Jenssegers\ImageHash\Implementations\PerceptualHash;
 use App\Models\SignatureSetting;
+use App\Traits\HandlesAbsensi;
+use Intervention\Image\Laravel\Facades\Image;
 
 class AttendanceController extends Controller
 {
     /* ================================================================
      |  HALAMAN DAFTAR ABSENSI (pilih jadwal, lihat siswa & status)
      |================================================================ */
+     use HandlesAbsensi;
     protected ImageHash $hasher;
     protected int $threshold;
     public function __construct()
@@ -95,11 +98,10 @@ class AttendanceController extends Controller
         $jadwal = JadwalPelajaran::aktif()->findOrFail($jadwalId);
 
         // CUKUP ambil absensi kalau sudah ada;
-        $absensi = Absensi::where([
-            'id_siswa'        => $siswa->id,
-            'id_jadwal'       => $jadwalId,
-            'tgl_waktu_absen' => $date,
-        ])->first();
+        $absensi = Absensi::where('id_siswa',  $siswa->id)
+            ->where('id_jadwal', $jadwalId)
+            ->whereDate('tgl_waktu_absen', $date)
+            ->first();
 
         return view(
             'guru.attendance.sign',
@@ -113,55 +115,65 @@ class AttendanceController extends Controller
     public function signStore(Request $request, Siswa $siswa)
     {
         $request->validate([
-            'signature' => 'required|string',            // data URI base64
+            'signature' => 'required|string',                    // data-URI
             'jadwal'    => ['required', Rule::exists('jadwal_pelajaran', 'id')],
             'date'      => ['nullable', 'date'],
         ]);
 
-        $jadwalId = $request->input('jadwal');
-        $date     = $request->input('date', Carbon::today()->toDateString());
-        $newSig   = str_replace(' ', '+', $request->signature);
-        $refSig   = $siswa->signature_data;             // data:image/png;base64,…
+        $jadwalId   = $request->input('jadwal');
+        $date       = $request->input('date', Carbon::today()->toDateString());
+        $rawSig     = str_replace(' ', '+', $request->signature);   // raw upload
+        $refSig     = $siswa->signature_data;                       // referensi
 
-        // 1) Pastikan sudah ada signature referensi di akun siswa
-        if (! $refSig) {
+        /* 1) Pastikan siswa sudah punya signature referensi */
+        if (!$refSig) {
             return back()
                 ->with('warning', 'Mohon daftarkan tanda tangan di akun siswa terlebih dahulu.')
                 ->withInput();
         }
 
-        // 2) Hitung similarity pHash
+        /* 2) Normalisasi & resize: trim + 600×200 px sama seperti pendaftaran */
         try {
-            $similarity = $this->compareSignatures($refSig, $newSig);
+            $img = Image::read($rawSig)
+                ->trim()
+                ->resizeCanvas(600, 200, 'ffffff', 'center');
+            $pngBinary = (string) $img->toPng();                   // Intervention v4
+            $newSig    = 'data:image/png;base64,' . base64_encode($pngBinary);
         } catch (\Throwable $e) {
             return back()
-                ->with('error', 'Gagal memproses tanda tangan: ' . $e->getMessage())
+                ->with('error', 'Gagal memproses gambar: ' . $e->getMessage())
                 ->withInput();
         }
 
-        // 3) Cek threshold
+        /* 3) Hitung kemiripan pHash */
+        try {
+            $similarity = $this->compareSignatures($refSig, $newSig);  // %
+        } catch (\Throwable $e) {
+            return back()
+                ->with('error', 'Gagal membandingkan tanda tangan: ' . $e->getMessage())
+                ->withInput();
+        }
+
+        /* 4) Periksa threshold */
         if ($similarity < $this->threshold) {
             return back()
-                ->with('warning', "Tanda tangan kurang cocok ({$similarity}%). Silakan ulangi.")
+                ->with('warning', "Tanda tangan kurang cocok ({$similarity} %). Silakan ulangi.")
                 ->withInput();
         }
 
-        // 4) Simpan atau perbarui absensi
-        Absensi::updateOrCreate(
-            [
-                'id_siswa'        => $siswa->id,
-                'id_jadwal'       => $jadwalId,
-                'tgl_waktu_absen' => $date,
-            ],
+        /* 5) Simpan / perbarui absensi */
+        $this->saveAbsensi(
+            $siswa->id,
+            $jadwalId,
             [
                 'status_absen'  => 'hadir',
                 'signature_ref' => $newSig,
-            ]
+            ]                                   // targetDate biarkan null ⇒ hari ini
         );
 
         return redirect()
             ->route('guru.attendance', ['jadwal' => $jadwalId])
-            ->with('success', "Tanda tangan cocok ({$similarity}%). Absensi tersimpan.");
+            ->with('success', "Tanda tangan cocok ({$similarity} %). Absensi tersimpan.");
     }
 
     /**

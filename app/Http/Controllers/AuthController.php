@@ -24,6 +24,11 @@ class AuthController extends Controller
             'username' => 'required|string',
             'password' => 'required|string',
         ]);
+        // hanya username & password diambil dari request
+        $credentials = $request->only('username', 'password');
+
+        // tambahkan syarat akun aktif
+        $credentials['status_aktif'] = 1;
 
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
@@ -38,7 +43,7 @@ class AuthController extends Controller
         }
 
         return back()->withErrors([
-            'username' => 'Username atau password salah.'
+            'username' => 'Username, password, atau status akun tidak valid.',
         ]);
     }
 
@@ -79,7 +84,7 @@ class AuthController extends Controller
         }
 
         Auth::login($user);
-        return redirect()->intended('/login')->with('success','Registrasi berhasil, silakan login');;
+        return redirect()->intended('/login')->with('success', 'Registrasi berhasil, silakan login');;
     }
 
 
@@ -90,7 +95,7 @@ class AuthController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect('/login')->with('success','Anda Keluar dari Akun');;
+        return redirect('/login')->with('success', 'Anda Keluar dari Akun');;
     }
     public function showRegisterForm()
     {

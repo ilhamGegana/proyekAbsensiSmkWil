@@ -9,12 +9,14 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use App\Jobs\SendNotifikasiAlpha;
 use App\Models\Notifikasi;
+use App\Traits\HandlesAbsensi;
 
 class StudentController extends Controller
 {
     /* ===============================================================
      |  Ambil seluruh jadwal AKTIF milik guru
      |=============================================================== */
+    use HandlesAbsensi;
     protected function schedules(int $guruId, string $hari)
     {
         return JadwalPelajaran::aktif()
@@ -106,14 +108,19 @@ class StudentController extends Controller
 
         $this->ensureInSchedule($siswa, $jadwalId);
 
-        // ↘ only build an object, don't persist to DB
-        $absensi = Absensi::firstOrNew(
-            [
-                'id_siswa'        => $siswa->id,
-                'id_jadwal'       => $jadwalId,
-                'tgl_waktu_absen' => $date,
-            ]
-        );
+        // cari baris absensi berdasarkan TANGGAL saja
+        $absensi = Absensi::where('id_siswa',  $siswa->id)
+            ->where('id_jadwal', $jadwalId)
+            ->whereDate('tgl_waktu_absen', $date)
+            ->first();
+
+        // kalau belum ada, buat objek kosong utk form (tidak simpan DB)
+        if (!$absensi) {
+            $absensi = new Absensi([
+                'id_siswa'  => $siswa->id,
+                'id_jadwal' => $jadwalId,
+            ]);
+        }
 
         // if it's a brand-new record, you can set a default for the form:
         if (! $absensi->exists) {
@@ -134,32 +141,37 @@ class StudentController extends Controller
         $jadwalId = $request->input('jadwal');
         $date     = $request->input('date', Carbon::today()->toDateString());
 
-        $this->ensureInSchedule($siswa, $jadwalId);
+        $jadwal   = $this->ensureInSchedule($siswa, $jadwalId)
+            ->load('mapel');
 
         $data = $request->validate([
             'status_absen' => 'required|in:hadir,sakit,izin,alpha',
             'keterangan'   => 'nullable|string|max:255',
         ]);
 
-        Absensi::updateOrCreate(
-            [
-                'id_siswa'        => $siswa->id,
-                'id_jadwal'       => $jadwalId,
-                'tgl_waktu_absen' => $date,
-            ],
-            $request->only('status_absen', 'keterangan')
+        $this->saveAbsensi(
+            $siswa->id,
+            $jadwalId,
+            $request->only('status_absen', 'keterangan'),
+            Carbon::parse($date)          // tanggal target
         );
 
         /* kirim notifikasi bila alpha */
         if ($data['status_absen'] === 'alpha') {
 
-            $kelas = $siswa->kelas;
-            $walikelas = $kelas?->guru;
-            $walimurid = $siswa->walimurid;
+            $kelas      = $siswa->kelas;
+            $walikelas  = $kelas?->guru;
+            $walimurid  = $siswa->walimurid;
+
+            $jamKe      = $jadwal->jam_ke;
+            $namaMapel  = $jadwal->mapel?->nama_mapel ?? '-';
 
             // Notifikasi ke guru/wali kelas
             if ($walikelas && $walikelas->telpon_guru) {
-                $pesanGuru = "Siswa anda dari kelas {$kelas->nama_kelas} atas nama {$siswa->nama_siswa} Alpha/Tidak Masuk";
+                $pesanGuru = "Siswa Anda ({$kelas->nama_kelas}) "
+                    . "atas nama {$siswa->nama_siswa} "
+                    . "Alpha/Tidak Masuk pada jam ke-{$jamKe} "
+                    . "mata pelajaran {$namaMapel}.";
 
                 $notifGuru = Notifikasi::create([
                     'id_guru'      => $walikelas->id,
@@ -174,7 +186,9 @@ class StudentController extends Controller
 
             // Notifikasi ke walimurid
             if ($walimurid && $walimurid->telpon_walimurid) {
-                $pesanWali = "Anak Anda {$siswa->nama_siswa} Alpha/Tidak Masuk";
+                $pesanWali = "Anak Anda {$siswa->nama_siswa} "
+                    . "Alpha/Tidak Masuk pada jam ke-{$jamKe} "
+                    . "mata pelajaran {$namaMapel}.";
 
                 $notifWali = Notifikasi::create([
                     'id_siswa'     => $siswa->id,
