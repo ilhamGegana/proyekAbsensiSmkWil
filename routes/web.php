@@ -114,10 +114,6 @@ Route::prefix('walimurid')->middleware(['auth', 'role:walimurid'])->name('walimu
     Route::get('/history', [HalamanWaliMuridController::class, 'history'])->name('history');
 });
 
-// Signature comparison test
-Route::get('/sig-test', function () {
-    $ref = public_path('signature_data/example2.png');
-    $new = public_path('signatures/test4.png');
-    $out = Process::run(['python3', base_path('scripts/compare_sig.py'), $ref, $new])->output();
-    return "Score = " . $out;
-});
+Route::get('/jadwal-pelajaran/download-pdf', [JadwalPelajaranController::class, 'downloadPdf'])->name('jadwal-pelajaran.download');
+
+Route::get('/guru/jadwalPelajaran', [\App\Http\Controllers\Guru\JadwalPelajaranguruController::class, 'index'])->name('guru.jadwalPelajaran');

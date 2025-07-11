@@ -21281,3 +21281,19 @@ Did you mean one of these?
 #4 /var/www/proyekAbsensiSmkWil/artisan(16): Illuminate\\Foundation\\Application->handleCommand()
 #5 {main}
 "} 
+[2025-07-10 21:27:32] local.DEBUG: DEBUG: Nilai compare() {"distance":35,"type":"integer"} 
+[2025-07-10 21:28:06] local.DEBUG: DEBUG: Nilai compare() {"distance":31,"type":"integer"} 
+[2025-07-10 21:28:06] local.DEBUG: DEBUG: Nilai compare() {"distance":31,"type":"integer"} 
+[2025-07-10 21:28:12] local.DEBUG: DEBUG: Nilai compare() {"distance":21,"type":"integer"} 
+[2025-07-10 21:28:21] local.DEBUG: DEBUG: Nilai compare() {"distance":32,"type":"integer"} 
+[2025-07-10 21:28:27] local.DEBUG: DEBUG: Nilai compare() {"distance":31,"type":"integer"} 
+[2025-07-10 21:28:35] local.DEBUG: DEBUG: Nilai compare() {"distance":32,"type":"integer"} 
+[2025-07-10 21:28:44] local.DEBUG: DEBUG: Nilai compare() {"distance":30,"type":"integer"} 
+[2025-07-10 21:28:52] local.DEBUG: DEBUG: Nilai compare() {"distance":28,"type":"integer"} 
+[2025-07-10 21:28:59] local.DEBUG: DEBUG: Nilai compare() {"distance":33,"type":"integer"} 
+[2025-07-10 21:29:05] local.DEBUG: DEBUG: Nilai compare() {"distance":25,"type":"integer"} 
+[2025-07-10 21:29:13] local.DEBUG: DEBUG: Nilai compare() {"distance":37,"type":"integer"} 
+[2025-07-10 21:29:20] local.DEBUG: DEBUG: Nilai compare() {"distance":37,"type":"integer"} 
+[2025-07-10 21:29:28] local.DEBUG: DEBUG: Nilai compare() {"distance":27,"type":"integer"} 
+[2025-07-10 21:29:34] local.DEBUG: DEBUG: Nilai compare() {"distance":37,"type":"integer"} 
+[2025-07-10 21:29:41] local.DEBUG: DEBUG: Nilai compare() {"distance":14,"type":"integer"} 

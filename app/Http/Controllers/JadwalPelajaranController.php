@@ -8,28 +8,33 @@ use App\Models\Guru;
 use App\Models\Kelas;
 use App\Models\Mapel;
 use Illuminate\Validation\Rule;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class JadwalPelajaranController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
         $jadwalPelajaran = JadwalPelajaran::with(['guru', 'mapel', 'kelas'])
-            ->orderBy('hari')->orderBy('jam_ke')->get();   // tampilkan SEMUA (aktif & non-aktif)
+            ->orderBy('hari')->orderBy('jam_ke')->get();
 
         return view('admin.jadwalPelajaran.index', [
             'jadwalPelajaran' => $jadwalPelajaran,
             'guru'  => Guru::all(),
             'mapel' => Mapel::all(),
-            'kelas' => Kelas::all(),
+            'kelas' => Kelas::all()
         ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
+    public function downloadPdf()
+    {
+        $jadwalPelajaran = JadwalPelajaran::with(['guru', 'mapel', 'kelas'])
+            ->orderBy('hari')->orderBy('jam_ke')->get();
+
+        $pdf = Pdf::loadView('admin.jadwalPelajaran.pdf', ['jadwalPelajaran' => $jadwalPelajaran]);
+
+        return $pdf->download('jadwal-pelajaran.pdf');
+    }
+
     public function create()
     {
         $guru = Guru::all();
@@ -38,9 +43,6 @@ class JadwalPelajaranController extends Controller
         return view('admin.jadwalPelajaran.create', compact('guru', 'mapel', 'kelas'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
         $this->validateForm($request);
@@ -51,17 +53,12 @@ class JadwalPelajaranController extends Controller
 
         return back()->with('success', 'Jadwal berhasil ditambahkan.');
     }
-    /**
-     * Display the specified resource.
-     */
+
     public function show(string $id)
     {
         //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(JadwalPelajaran $jadwalPelajaran)
     {
         $guru = Guru::all();
@@ -70,9 +67,6 @@ class JadwalPelajaranController extends Controller
         return view('admin.jadwalPelajaran.edit', compact('jadwalPelajaran', 'guru', 'mapel', 'kelas'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, JadwalPelajaran $jadwalPelajaran)
     {
         $this->validateForm($request, $jadwalPelajaran->id);
@@ -85,6 +79,7 @@ class JadwalPelajaranController extends Controller
 
         return back()->with('success', 'Jadwal berhasil diperbarui.');
     }
+
     public function toggle(JadwalPelajaran $jadwalPelajaran)
     {
         $jadwalPelajaran->update(['is_active' => ! $jadwalPelajaran->is_active]);
@@ -96,26 +91,20 @@ class JadwalPelajaranController extends Controller
                 : 'Jadwal di-nonaktifkan.'
         );
     }
-    /**
-     * Remove the specified resource from storage.
-     */
+
     public function destroy(JadwalPelajaran $jadwalPelajaran)
     {
-        // ada absensi → non-aktifkan saja
         if ($jadwalPelajaran->absensi()->exists()) {
             $jadwalPelajaran->update(['is_active' => false]);
 
-            return back()->with(
-                'success',
-                'Jadwal sudah terpakai; status di-nonaktifkan.'
-            );
+            return back()->with('success', 'Jadwal sudah terpakai; status di-nonaktifkan.');
         }
 
-        // belum terpakai → soft delete
         $jadwalPelajaran->delete();
 
         return back()->with('success', 'Jadwal pelajaran berhasil dihapus.');
     }
+
     private function validateForm(Request $r, $ignoreId = null): void
     {
         $r->validate([

@@ -117,7 +117,7 @@
         </div>
     </div>
 <?php $__env->stopSection(); ?>
-<script>
+<!-- <script>
     document.addEventListener('DOMContentLoaded', function() {
         const editButtons = document.querySelectorAll('a.btn-warning');
 
@@ -151,6 +151,6 @@
             });
         });
     });
-</script>
+</script> -->
 
 <?php echo $__env->make('admin.layouts.master', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH /var/www/proyekAbsensiSmkWil/resources/views/admin/guru/index.blade.php ENDPATH**/ ?>

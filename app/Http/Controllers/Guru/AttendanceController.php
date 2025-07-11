@@ -19,7 +19,7 @@ class AttendanceController extends Controller
     /* ================================================================
      |  HALAMAN DAFTAR ABSENSI (pilih jadwal, lihat siswa & status)
      |================================================================ */
-     use HandlesAbsensi;
+    use HandlesAbsensi;
     protected ImageHash $hasher;
     protected int $threshold;
     public function __construct()
@@ -115,53 +115,40 @@ class AttendanceController extends Controller
     public function signStore(Request $request, Siswa $siswa)
     {
         $request->validate([
-            'signature' => 'required|string',                    // data-URI
+            'signature' => 'required|string',            // data URI base64
             'jadwal'    => ['required', Rule::exists('jadwal_pelajaran', 'id')],
             'date'      => ['nullable', 'date'],
         ]);
 
-        $jadwalId   = $request->input('jadwal');
-        $date       = $request->input('date', Carbon::today()->toDateString());
-        $rawSig     = str_replace(' ', '+', $request->signature);   // raw upload
-        $refSig     = $siswa->signature_data;                       // referensi
+        $jadwalId = $request->input('jadwal');
+        $date     = $request->input('date', Carbon::today()->toDateString());
+        $newSig   = str_replace(' ', '+', $request->signature);
+        $refSig   = $siswa->signature_data;             // data:image/png;base64,…
 
-        /* 1) Pastikan siswa sudah punya signature referensi */
-        if (!$refSig) {
+        // 1) Pastikan sudah ada signature referensi di akun siswa
+        if (! $refSig) {
             return back()
                 ->with('warning', 'Mohon daftarkan tanda tangan di akun siswa terlebih dahulu.')
                 ->withInput();
         }
 
-        /* 2) Normalisasi & resize: trim + 600×200 px sama seperti pendaftaran */
+        // 2) Hitung similarity pHash
         try {
-            $img = Image::read($rawSig)
-                ->trim()
-                ->resizeCanvas(600, 200, 'ffffff', 'center');
-            $pngBinary = (string) $img->toPng();                   // Intervention v4
-            $newSig    = 'data:image/png;base64,' . base64_encode($pngBinary);
+            $similarity = $this->compareSignatures($refSig, $newSig);
         } catch (\Throwable $e) {
             return back()
-                ->with('error', 'Gagal memproses gambar: ' . $e->getMessage())
+                ->with('error', 'Gagal memproses tanda tangan: ' . $e->getMessage())
                 ->withInput();
         }
 
-        /* 3) Hitung kemiripan pHash */
-        try {
-            $similarity = $this->compareSignatures($refSig, $newSig);  // %
-        } catch (\Throwable $e) {
-            return back()
-                ->with('error', 'Gagal membandingkan tanda tangan: ' . $e->getMessage())
-                ->withInput();
-        }
-
-        /* 4) Periksa threshold */
+        // 3) Cek threshold
         if ($similarity < $this->threshold) {
             return back()
-                ->with('warning', "Tanda tangan kurang cocok ({$similarity} %). Silakan ulangi.")
+                ->with('warning', "Tanda tangan kurang cocok ({$similarity}%). Silakan ulangi.")
                 ->withInput();
         }
 
-        /* 5) Simpan / perbarui absensi */
+        /* 4) Simpan / perbarui absensi */
         $this->saveAbsensi(
             $siswa->id,
             $jadwalId,

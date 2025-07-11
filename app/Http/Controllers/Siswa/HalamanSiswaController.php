@@ -2,16 +2,12 @@
 
 namespace App\Http\Controllers\Siswa;
 
-use App\Models\Kelas;
-use App\Models\Absensi;
+
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Http\JsonResponse;
 use Intervention\Image\Laravel\Facades\Image;
-use Intervention\Image\Encoders\PngEncoder;
 use Carbon\CarbonInterface;
 
 class HalamanSiswaController extends Controller

@@ -119,7 +119,7 @@
         </div>
     </div>
 @endsection
-<script>
+<!-- <script>
     document.addEventListener('DOMContentLoaded', function() {
         const editButtons = document.querySelectorAll('a.btn-warning');
 
@@ -153,4 +153,4 @@
             });
         });
     });
-</script>
+</script> -->

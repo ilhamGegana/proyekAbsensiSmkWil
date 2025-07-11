@@ -201,6 +201,9 @@
     </div>
 </div>
 <!-- ============ END OFFCANVAS TAMBAH ============ -->
+<a href="{{ route('jadwal-pelajaran.download', request()->all()) }}" class="btn btn-danger ms-2">
+    <i class="fas fa-file-pdf"></i> Download PDF
+</a>
 @endsection
 
 <script>
@@ -208,16 +211,16 @@
 
         /** Update nama & id guru ketika mapel berubah */
         function syncGuru(sel) {
-            const frm = sel.closest('form');
-            const txt = frm.querySelector('.guru-name');
-            const hid = frm.querySelector('input[name="id_guru"]');
+            const frm = sel.closest('form'); // cari form tempat select itu berada
+            const txt = frm.querySelector('.guru-name'); // input readonly untuk menampilkan nama guru
+            const hid = frm.querySelector('input[name="id_guru"]'); // hidden input untuk menyimpan ID guru
 
-            const opt = sel.selectedOptions[0] || {};
-            const gId = opt.dataset.guruId || '';
-            const gNm = opt.dataset.guruName || '-';
+            const opt = sel.selectedOptions[0] || {}; // ambil <option> yang sedang dipilih
+            const gId = opt.dataset.guruId || ''; //ambil atribut data-guru-id dari <option>
+            const gNm = opt.dataset.guruName || '-'; // ambil atribut data-guru-name dari <option>
 
-            if (txt) txt.value = gNm;
-            if (hid) hid.value = gId;
+            if (txt) txt.value = gNm; // tampilkan nama guru ke input readonly
+            if (hid) hid.value = gId; // set nilai hidden input dengan ID guru
         }
 
         // jalankan untuk setiap select mapel di halaman

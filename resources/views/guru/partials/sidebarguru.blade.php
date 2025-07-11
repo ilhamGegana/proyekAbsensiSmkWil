@@ -54,6 +54,14 @@
             <span>Rekap Absensi</span>
         </a>
     </li>
+    <hr class="sidebar-divider">
+    <div class="sidebar-heading">Jadwal</div>
+    <li class="nav-item {{ request()->routeIs('guru.jadwalPelajaran') ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route('guru.jadwalPelajaran') }}">
+            <i class="fas fa-file-alt"></i>
+            <span>Jadwal Pelajaran</span>
+        </a>
+    </li>
 
     <hr class="sidebar-divider d-none d-md-block">
 </ul>

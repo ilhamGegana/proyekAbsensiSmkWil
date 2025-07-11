@@ -2,10 +2,9 @@
 
 namespace App\Exports;
 
-use App\Models\Absensi;
+
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Maatwebsite\Excel\Concerns\WithMapping;
 
 class RekapAbsensiExport implements FromCollection, WithHeadings, WithMapping
